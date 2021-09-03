@@ -1,0 +1,108 @@
+body, .row, .col {
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: bolder;
+}
+
+html, body {
+  height: 100%;
+}
+
+.App {
+  min-height: 100%;
+  position: relative;
+}
+
+.App-vertical {
+  min-height: 90vh;
+}
+
+.login-form {
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 200px);
+  grid-gap: 100px;
+  justify-content: center
+}
+
+.grid-item {
+  background-color: #06933C!important;
+  border-radius: 10px!important;
+  cursor: pointer;
+}
+
+.text-item {
+  color: #FFF
+}
+
+.icon-item {
+  font-size: 80px!important;
+  color: #FFF;
+}
+
+.ondasSVG {
+  opacity: 85%;
+  min-width: 100%;
+}
+
+.ondasSVG-inverted {
+  position: absolute; 
+  opacity: 85%;
+  min-width: 100%;
+  transform: rotate(180deg);
+}
+
+.logo {
+  width: auto;
+  padding-top: 30px;
+  padding-left: 40px;
+}
+
+.topbar {
+  display: flex;
+  color: white;
+  justify-content: flex-end;
+  padding-top: 20px;
+  align-items: flex-start;
+}
+
+.topbar-text {
+  padding-top: 3px;
+  padding-right: 10px;
+  font-size: 18px;
+}
+
+.topbar-icon {
+  transform: scale(1.5);
+  padding-top: 3px;
+  padding-right: 10px;
+  padding-left: 30px;
+  display: flex   ;
+}
+
+.no-style-white {
+  text-decoration: none;
+  color: white;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  transform: rotate(180deg);
+  color: white;
+  flex-grow: 1;
+}
+
+.header {
+  width: 100%;
+}
+
+.text-title {
+  margin-bottom: 80px;
+  font-size: 30px;
+  color: #06933C;
+}
