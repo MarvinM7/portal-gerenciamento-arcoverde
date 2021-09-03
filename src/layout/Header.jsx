@@ -57,19 +57,19 @@ const Header = () => {
         <Col>
           <img
             src={`${process.env.PUBLIC_URL}/imgs/logo.png`}
-            style={{marginLeft: 20, marginTop: 20}}
+            style={{position: 'absolute', left: 20, top: 20, cursor: 'pointer'}}
             alt={'Logo'}
           />
         </Col>
         {user
           ?<Col className='text-end'>
-              <div style={{marginTop: 10, marginRight: 10}}>
+              <div style={{position: 'absolute', top: 10, right: 10}}>
                 <PermIdentityIcon
-                  style={{fontSize: 50, color: '#FFF'}}
+                  style={{fontSize: 50, color: '#FFF', cursor: 'pointer'}}
                   onClick={openProfile}
                 />
                 <ExitToAppIcon
-                  style={{fontSize: 50, color: '#FFF'}}
+                  style={{fontSize: 50, color: '#FFF', cursor: 'pointer'}}
                   onClick={logout}
                 />
               </div>
