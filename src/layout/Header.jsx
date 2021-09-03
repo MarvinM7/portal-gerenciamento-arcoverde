@@ -8,18 +8,27 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
   title: {
     flexGrow: 1,
   },
+  logo: {
+    maxWidth: 50,
+  },
+  icon: {
+    fontSize: 40,
+    color: '#FFF',
+    cursor: 'pointer'
+  }
 }));
 
 const Header = () => {
@@ -43,40 +52,26 @@ const Header = () => {
   }
 
   return (
-    <div>
-      <img
-        src={`${process.env.PUBLIC_URL}/imgs/wave1.svg`}
-        alt={''}
-        style={{"maxWidth":"100%", "minWidth": "100%", "zIndex":"-1", "position":"absolute", "opacity": "85%"}}
-      />
-      <img
-        src={`${process.env.PUBLIC_URL}/imgs/wave.svg`}
-        style={{"maxWidth":"100%", "minWidth": "100%", "zIndex":"-1", "position":"absolute", "opacity": "85%"}}
-      />
-      <Row>
-        <Col>
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
           <img
-            src={`${process.env.PUBLIC_URL}/imgs/logo.png`}
-            style={{position: 'absolute', left: 20, top: 20, cursor: 'pointer'}}
-            alt={'Logo'}
+            src={process.env.PUBLIC_URL + '/imgs/logo fundo branco.png'}
+            alt="Logo"
+            className={classes.logo}
           />
-        </Col>
-        {user
-          ?<Col className='text-end'>
-              <div style={{position: 'absolute', top: 10, right: 10}}>
-                <PermIdentityIcon
-                  style={{fontSize: 50, color: '#FFF', cursor: 'pointer'}}
-                  onClick={openProfile}
-                />
-                <ExitToAppIcon
-                  style={{fontSize: 50, color: '#FFF', cursor: 'pointer'}}
-                  onClick={logout}
-                />
-              </div>
-            </Col>
-          :null
-        }
-      </Row>
+          <div className={classes.title}></div>
+          <PermIdentityIcon
+            className={classes.icon}
+            style={{marginRight: 20}}
+            onClick={openProfile}
+          />
+          <ExitToAppIcon
+            className={classes.icon}
+            onClick={logout}
+          />
+        </Toolbar>
+      </AppBar>
     </div>
   )
 }

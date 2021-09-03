@@ -98,7 +98,11 @@ const LoginPage = () => {
           <Col className='align-self-center' xs='11' sm='10' md='9' lg='7' xl='5'>
             <Row>
               <Col className='text-center'>
-                <img src={process.env.PUBLIC_URL + '/imgs/logo.png'} alt={'Logo'} />
+                <img
+                  src={process.env.PUBLIC_URL + '/imgs/logo.png'}
+                  alt={'Logo'} 
+                  style={{maxWidth: 200}}
+                />
               </Col>
             </Row>
             <Row className='login-form'>

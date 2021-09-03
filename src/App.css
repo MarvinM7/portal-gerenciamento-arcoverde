@@ -106,3 +106,7 @@ html, body {
   font-size: 30px;
   color: #06933C;
 }
+
+.top-buffer {
+  margin-top: 15px!important;
+}

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { Switch, Route } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
@@ -11,9 +12,21 @@ import EmployeeConsultationPage from './EmployeeConsultation/EmployeeConsultatio
 import EmployeeFormPage from './EmployeeForm/EmployeeForm';
 
 const Root = () => {
+  const user = useSelector((state) => state.user);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!user) {
+      history.push('/login');
+    }
+  }, [user])
+
   return (
     <React.Fragment>
-      <Header />
+      {user
+        ?<Header />
+        :null
+      }
       <Switch>
         <Route path="/login">
           <LoginPage />
@@ -28,7 +41,10 @@ const Root = () => {
           <HomePage />
         </Route>
       </Switch>
-      <Footer />
+      {user
+        ?<Footer />
+        :null
+      }
     </React.Fragment>
   )
 }
