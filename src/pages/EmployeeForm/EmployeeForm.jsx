@@ -498,10 +498,10 @@ const EmployeeFormPage = () => {
             <Button variant="contained" color="primary" disableElevation>Dados cadastrais</Button>
           </Col>
           <Col xs='10' sm='4' md='3' lg='3' xl='1'>
-            <Button variant="contained" color="grey" disableElevation>Ocorrências</Button>
+            <Button variant="contained" color="secondary" disableElevation>Ocorrências</Button>
           </Col>
           <Col xs='10' sm='4' md='3' lg='3' xl='1'>
-            <Button variant="contained" color="grey" disableElevation>Afastamentos</Button>
+            <Button variant="contained" color="secondary" disableElevation>Afastamentos</Button>
           </Col>
           <Col xs='10' sm='4' md='3' lg='3' xl='1'>
             <IconButton> <EditIcon /> </IconButton>
@@ -511,84 +511,21 @@ const EmployeeFormPage = () => {
         </Row>
         <Row></Row><Row></Row><Row></Row>
         <Row className='justify-content-evenly'>
-          <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-            <Row>
-              <TextField id="standard-disabled" label="Tempo de serviço" defaultValue="3 anos, 2 meses e 17 dias" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="CPF" defaultValue="123.456.789-10" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="RG" defaultValue="987654" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Portador de deficiência" defaultValue="Não" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Estado Civil" defaultValue="Casada" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Regime previdenciário" defaultValue="Previdência social" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Escolaridade" defaultValue="Superior completo" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Lotação de endereço" defaultValue="Rua verde arco" InputProps={{ readOnly: true }} />
-            </Row>
-          </Col>
-          <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-            <Row>
-              <TextField id="standard-disabled" label="Email institucional" defaultValue="ana.tereza@arcoverde.gov.pe.br" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Email pessoal" defaultValue="ana.tereza@gmail.com" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Título de Eleitor" defaultValue="123456789" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Tipo de vínculo" defaultValue="CLT" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Sexo" defaultValue="Feminino" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Sindicato" defaultValue="Não" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Endereço pessoal" defaultValue="Rua Arcoverde" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Descrição da lotação" defaultValue="Casa branca" InputProps={{ readOnly: true }} />
-            </Row>
-          </Col>
-          <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-            <Row>
-              <TextField id="standard-disabled" label="Nome da mãe" defaultValue="Ana Cristina" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Nome do pai" defaultValue="Tiago da Costa" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Nacionalidade" defaultValue="Brasileira" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Servidor cedido" defaultValue=" " InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Portaria da aposentadoria" defaultValue="12.896" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Data da aposentadoria" defaultValue="01/09/2021" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Data de nascimento" defaultValue="13/06/1984" InputProps={{ readOnly: true }} />
-            </Row>
-            <Row>
-              <TextField id="standard-disabled" label="Aposentado" defaultValue="Sim" InputProps={{ readOnly: true }} />
-            </Row>
-          </Col>
+          {data.map((column, index) => {
+            return (
+              <Col key={index} className='text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
+                {column.map(item => {
+                  return (
+                    <ColumnItem
+                      key={item.id}
+                      data={item}
+                      onChange={onChange}
+                    />
+                  )
+                })}
+              </Col>
+            )
+          })}
         </Row>
         <Row className='justify-content-evenly'>
           <Row className='justify-content-evenly'>
