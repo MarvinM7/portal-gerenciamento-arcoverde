@@ -97,10 +97,6 @@ html, body {
   flex-grow: 1;
 }
 
-.header {
-  width: 100%;
-}
-
 .text-title {
   margin-bottom: 80px;
   font-size: 30px;

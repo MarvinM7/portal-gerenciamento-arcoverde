@@ -1,7 +1,6 @@
 body, .row, .col {
     font-family: "Montserrat", sans-serif !important;
     font-weight: bolder;
-    overflow-x: hidden;
 }
 
 .ondasSVG {
@@ -50,7 +49,6 @@ body, .row, .col {
 }
 
 .foto-servidor {
-    margin-right: 64px;
     min-height: 128px;
     min-width: 128px;
     max-height: 208px;

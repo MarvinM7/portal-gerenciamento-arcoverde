@@ -18,6 +18,7 @@ import MenuDrawer from './Menu';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    marginBottom: 25
   },
   menuButton: {
     marginRight: theme.spacing(2),
