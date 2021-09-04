@@ -110,3 +110,7 @@ html, body {
 .top-buffer {
   margin-top: 15px!important;
 }
+
+.pointer {
+  cursor: pointer;
+}

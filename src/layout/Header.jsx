@@ -11,9 +11,9 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
+
+import MenuDrawer from './Menu';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,13 +57,12 @@ const Header = () => {
     dispatch({type: 'LOGOUT'})
   }
 
-  const openLink = (url) => {
-    setShowMenu(null);
-    history.push(url);
-  }
-
   return (
     <div className={classes.root}>
+      <MenuDrawer
+        show={showMenu}
+        close={() => setShowMenu(false)}
+      />
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -71,22 +70,10 @@ const Header = () => {
             className={classes.menuButton}
             color="inherit"
             aria-label="menu"
-            onClick={(e) => setShowMenu(e.currentTarget)}
+            onClick={() => setShowMenu(true)}
           >
             <MenuIcon />
           </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={showMenu}
-            keepMounted
-            open={Boolean(showMenu)}
-            onClose={() => setShowMenu(null)}
-          >
-            <MenuItem onClick={() => openLink('/employee/consultation')}>Servidores</MenuItem>
-            <MenuItem onClick={() => openLink('/employee/consultation')}>Relatórios</MenuItem>
-            <MenuItem onClick={() => openLink('/employee/consultation')}>Declaração</MenuItem>
-            <MenuItem onClick={() => openLink('/employee/consultation')}>Financeiro</MenuItem>
-          </Menu>
           <img
             src={process.env.PUBLIC_URL + '/imgs/logo fundo branco.png'}
             alt="Logo"

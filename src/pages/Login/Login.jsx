@@ -138,7 +138,7 @@ const LoginPage = () => {
                 color="primary"
                 onClick={loginFunction}
               >
-                Acessar senha asdas
+                Acessar
               </Button>
             </Row>
             <Row className='login-form'>
