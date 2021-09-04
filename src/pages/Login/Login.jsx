@@ -138,11 +138,12 @@ const LoginPage = () => {
                 color="primary"
                 onClick={loginFunction}
               >
-                Acessar
+                Acessar senha asdas
               </Button>
             </Row>
             <Row className='login-form'>
               <Button
+                variant='outlined'
                 color="primary"
                 onClick={forgotPasswordFunction}
               >
