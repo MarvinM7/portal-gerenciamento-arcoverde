@@ -10,6 +10,10 @@ body, .row, .col {
     min-width: 100%;
 }
 
+.MuiPaper-outlined {
+    border: 2px solid rgba(69, 137, 37, 1.0) !important;
+}
+
 .ondasSVG-inverted {
     z-index: -1; 
     position: absolute; 
