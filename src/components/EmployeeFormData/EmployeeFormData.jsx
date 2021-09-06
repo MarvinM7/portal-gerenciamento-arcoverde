@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
+import ReplaceImage from './ReplaceImage';
 
 const EmployeeFormData = () => {
   const [alert, setAlert] = useState({});
@@ -465,7 +466,7 @@ const EmployeeFormData = () => {
       }
       <Row className='justify-content-evenly'>
         <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
-          <img src={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`} className="foto-servidor"></img>
+          <ReplaceImage props={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`}/>
         </Col>
       </Row>
       <Row className='justify-content-evenly'>
