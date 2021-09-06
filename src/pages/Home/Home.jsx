@@ -9,6 +9,8 @@ import Row from 'react-bootstrap/Row';
 
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PeopleIcon from '@material-ui/icons/People';
+import DescriptionIcon from '@material-ui/icons/Description';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 import Grid from '../../components/Grid/Grid';
 
@@ -27,13 +29,13 @@ const HomePage = (props) => {
       id: 2,
       link: '/',
       title: 'Relatórios',
-      icon: <PeopleIcon className='icon-item' />
+      icon: <ListAltIcon className='icon-item' />
     },
     {
       id: 3,
       link: '/',
       title: 'Declaração',
-      icon: <PeopleIcon className='icon-item' />
+      icon: <DescriptionIcon className='icon-item' />
     },
     {
       id: 4,

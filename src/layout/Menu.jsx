@@ -15,6 +15,8 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PeopleIcon from '@material-ui/icons/People';
+import DescriptionIcon from '@material-ui/icons/Description';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 const useStyles = makeStyles({
   list: {
@@ -47,13 +49,13 @@ const MenuDrawer = (props) => {
       id: 2,
       link: '/',
       title: 'Relatórios',
-      icon: <PeopleIcon />
+      icon: <ListAltIcon />
     },
     {
       id: 3,
       link: '/',
       title: 'Declaração',
-      icon: <PeopleIcon />
+      icon: <DescriptionIcon />
     },
     {
       id: 4,
