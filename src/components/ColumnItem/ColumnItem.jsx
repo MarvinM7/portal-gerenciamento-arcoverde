@@ -16,6 +16,9 @@ const ColumnItem = ({ data, onChange }) => {
             data,
             value: e.target.value
           })}
+          inputProps={{
+            readOnly: data.readOnly ? data.readOnly : false,
+          }}
         />
       :null
       }
