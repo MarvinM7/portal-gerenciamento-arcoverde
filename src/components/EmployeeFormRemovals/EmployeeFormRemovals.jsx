@@ -189,6 +189,7 @@ const EmployeeFormRemovals = () => {
                 placeholder='Digite aqui'
                 value={removal.text}
                 onChange={(e) => setRemoval({...removal, text: e.target.value})}
+                fullWidth = {true}
                 multiline
               />
             </CardContent>
@@ -274,6 +275,7 @@ const EmployeeFormRemovals = () => {
                       id="standard-textarea"
                       value={item.text}
                       placeholder='Digite aqui'
+                      fullWidth = {true}
                       multiline
                     />
                   </CardContent>
