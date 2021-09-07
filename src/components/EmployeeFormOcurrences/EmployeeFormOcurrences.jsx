@@ -1,20 +1,32 @@
-import { Button } from '@material-ui/core';
-import { Box } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
-import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Container from 'react-bootstrap/Container';
-import ButtonStatus from './ButtonStatus';
 
 const EmployeeFormOcurrences = () => {
   const [ocurrence, setOcurrence] = useState('');
+  const [ocurrences, setOcurrences] = useState([
+    {
+      id: 1,
+      text: 'Ocorrência 1'
+    },
+    {
+      id: 2,
+      text: 'Ocorrência 2'
+    },
+    {
+      id: 3,
+      text: 'Ocorrência 3'
+    },
+  ]);
 
   const data = [
     [
@@ -66,6 +78,35 @@ const EmployeeFormOcurrences = () => {
     ]
   ]
 
+  const save = () => {
+    let obj = {
+      id: ocurrences.length + 1,
+      text: ocurrence
+    }
+
+    let newOcurrences = [];
+    newOcurrences.push(obj);
+
+    ocurrences.forEach(item => {
+      newOcurrences.push(item);
+    })
+
+    setOcurrences(newOcurrences);
+    setOcurrence('');
+  }
+
+  const remove = (id) => {
+    let newOcurrences = [];
+
+    ocurrences.forEach(item => {
+      if (item.id !== id) {
+        newOcurrences.push(item);
+      }
+    })
+
+    setOcurrences(newOcurrences);
+  }
+
   return (
     <React.Fragment>
       <Row className='justify-content-evenly'>
@@ -91,52 +132,84 @@ const EmployeeFormOcurrences = () => {
             })}
           </Row>
         </Col>
-          <Container fluid>
+      </Row>
+      <div className="simple-space"></div>
+      <div className="simple-space"></div>
+      <Row>
+        <Col xs='12' sm='10' md='10' >
+          <TextField
+            fullWidth={true}
+            variant='outlined'
+            id='new-ocurrence'
+            label='Nova ocorrência'
+            value={ocurrence}
+            onChange={(e) => setOcurrence(e.target.value)}
+          />
+        </Col>
+        <Col xs='12' sm='2' md='2'>
+          <Box border="2px solid #06933C" padding="8px 8px" marginRight="20px">
+            {props => 
+              <Button
+                {...props}
+                variant="outlined"
+                color="primary"
+                onClick={() => save()}
+              >
+                <SaveIcon htmlColor={'#000'} />
+              </Button> 
+            }
+          </Box>
+        </Col>
+      </Row>
+      <div className="simple-space"></div>
+      <div className="simple-space"></div>
+      {ocurrences.map(item => {
+        return (
+          <Row key={item.id}>
+            <Col xs='12' sm='10' md='10' >
+              <TextField
+                fullWidth={true}
+                variant='outlined'
+                id='new-ocurrence'
+                label='Nova ocorrência'
+                value={item.text}
+                onChange={(e) => setOcurrence(e.target.value)}
+              />
+            </Col>
+            <Col xs='12' sm='2' md='2' >
+              <Box border="2px solid #06933C" padding="8px 8px" marginRight="20px">
+                {props => 
+                  <Button
+                    {...props}
+                    variant="outlined"
+                    color="primary"
+                  >
+                    <SaveIcon  htmlColor={'#000'} />
+                  </Button> 
+                }
+              </Box>
+              <Box border="2px solid #06933C" padding="8px 8px"> 
+                {props => 
+                  <Button
+                    {...props}
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => remove(item.id)}
+                  >
+                    <DeleteIcon htmlColor={'#000'} />
+                  </Button> 
+                }
+              </Box>
+            </Col>
             <div className="simple-space"></div>
             <div className="simple-space"></div>
-            <Row>
-              <Col xs={10}>
-                  <TextField
-                    fullWidth={true}
-                    variant='outlined'
-                    id='new-ocurrence'
-                    label='Nova ocorrência'
-                    defaultValue={ocurrence}
-                    onChange={(e) => setOcurrence(e.target.value)}
-                  />
-              </Col>
-              <Col>
-                  <Box border="2px solid #06933C" padding="8px 8px" marginRight="20px">
-                    {props => 
-                      <Button {...props} variant="outlined" color="primary">
-                        <SaveIcon  htmlColor={ButtonStatus('enabled')}/>
-                      </Button> 
-                    }
-                  </Box>
-                  <Box border="2px solid #06933C" marginRight="20px">
-                    {props => 
-                      <Button {...props} variant="outlined" color="primary">
-                        <EditIcon htmlColor={ButtonStatus('disabled')}/>
-                      </Button> 
-                    }
-                  </Box>
-                  <Box border="2px solid #06933C"> 
-                    {props => 
-                      <Button {...props} variant="outlined" color="primary">
-                        <DeleteIcon htmlColor={ButtonStatus('disabled')}/>
-                      </Button> 
-                    }
-                  </Box>
-              </Col>
-              <div className="simple-space"></div>
-              <div className="simple-space"></div>
-              <Row className='justify-content-evenly'>
-                <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
-                  <Button variant="contained" color="primary" disableElevation>Imprimir</Button>
-                </Col>
-              </Row>
-            </Row>
-          </Container>
+          </Row>
+        )
+      })}
+      <Row className='justify-content-evenly'>
+        <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
+          <Button variant="contained" color="primary" disableElevation>Imprimir</Button>
+        </Col>
       </Row>
     </React.Fragment>
   )

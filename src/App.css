@@ -88,13 +88,12 @@ html, body {
 }
 
 .footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
   width: 100%;
   transform: rotate(180deg);
   color: white;
   flex-grow: 1;
+  margin-top: 21vh;
+  top: 100%;
 }
 
 .text-title {

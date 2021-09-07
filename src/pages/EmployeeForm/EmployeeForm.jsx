@@ -74,16 +74,6 @@ const EmployeeFormPage = () => {
           <EmployeeFormRemovals />
         :null
         }
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
-        <div className="simple-space"></div>
       </Container>
     </React.Fragment>
   )
