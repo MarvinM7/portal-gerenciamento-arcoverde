@@ -76,7 +76,7 @@ const Header = () => {
             <MenuIcon />
           </IconButton>
           <img
-            src={process.env.PUBLIC_URL + '/imgs/logo_header.png'}
+            src={process.env.PUBLIC_URL + '/imgs/Logo_header.png'}
             alt="Logo"
             className={classes.logo}
           />
