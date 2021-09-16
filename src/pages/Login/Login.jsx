@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -12,6 +13,8 @@ import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
+import URL from '../../components/Url/Url';
 
 const LoginPage = () => {
   const user = useSelector((state) => state.user);
@@ -28,7 +31,7 @@ const LoginPage = () => {
     if (user) {
       history.push('/');
     }
-  }, [user]);
+  }, [history, user]);
 
   const loginFunction = () => {
     setShowAlert(false);
@@ -45,15 +48,30 @@ const LoginPage = () => {
       })
       setShowAlert(true);
     } else {
-      //AJUSTE rotina de logar
       let obj = {
-        id: 1,
-        name: 'João Bernardo',
-        email: 'joao.bernardo@gmail.com',
-        imagem: 'imagem',
-        token: 'token'
+        email: login,
+        senha: password
       }
-      dispatch({ type: 'LOGIN', obj });
+      
+      axios.post(`${URL.backend}login`, obj)
+      .then(resposta => {
+        let { id, nome, email } = resposta.data.data[0];
+        let usuario_info = {
+          id,
+          nome,
+          email,
+          imagem: 'imagem',
+          token: 'token'
+        }
+        dispatch({ type: 'LOGIN', usuario_info });
+      })
+      .catch(erro => {
+        setAlert({
+          severity: 'error',
+          content: erro.response.data.messagem
+        })
+        setShowAlert(true);
+      })
     }
   }
 

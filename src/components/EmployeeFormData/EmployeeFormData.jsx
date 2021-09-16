@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import axios from 'axios';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -8,8 +10,10 @@ import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/Button';
+
 import TextField from '@material-ui/core/TextField';
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
+import URL from "../../components/Url/Url";
 import ReplaceImage from './ReplaceImage';
 
 const EmployeeFormData = () => {
@@ -26,27 +30,67 @@ const EmployeeFormData = () => {
   const [rg, setRg] = useState('');
   const [handicapped, setHandicapped] = useState('');
   const [maritalStatus, setMaritalStatus] = useState('');
+  const [estadoCivilOpcoes, setEstadoCivilOpcoes] = useState([]);
   const [welfarePolicy, setWelfarePolicy] = useState('');
+  const [regimePrevidenciarioOpcoes, setRegimePrevidenciarioOpcoes] = useState([]);
   const [schooling, setSchooling] = useState('');
+  const [escolaridadeOpcoes, setEscolaridadeOpcoes] = useState([]);
   const [workspaceAddress, setWorkspaceAddress] = useState('');
 
   const [institutionalEmail, setInstitutionalEmail] = useState('');
   const [personalEmail, setPersonalEmail] = useState('');
   const [voterRegistrationCard, setVoterRegistrationCard] = useState('');
   const [typeOfContract, setTypeOfContract] = useState('');
+  const [vinculoOpcoes, setVinculoOpcoes] = useState([]);
   const [gender, setGender] = useState('');
+  const [generoOpcoes, setGeneroOpcoes] = useState([]);
   const [syndicate, setSyndicate] = useState('');
   const [personalAddress, setPersonalAddress] = useState('');
   const [workspaceDescription, setWorkspaceDescription] = useState('');
-
+  const [enderecoComercial, setEnderecoComercial] = useState('');
+   
   const [mothersName, setMothersName] = useState('');
   const [fathersName, setFathersName] = useState('');
   const [nationality, setNationality] = useState('');
+  const [nacionalidadeOpcoes, setNacionalidadeOpcoes] = useState([]);
   const [borrowedEmployee, setBorrowedEmployee] = useState('');
   const [retirementOrdinance, setRetirementOrdinance] = useState('');
   const [retirementDate, setRetirementDate] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [retired, setRetired] = useState('');
+  const [salario, setSalario] = useState('');
+
+  const [dependenteNome, setDependenteNome] = useState('');
+  const [dependenteCpf, setDependenteCpf] = useState('');
+  const [dependenteDataNascimento, setDependenteDataNascimento] = useState('');
+
+  const [dependentes, setDependentes] = useState([]);
+  const [parentesco, setParentesco] = useState([]);
+
+  useEffect(() => {
+    axios.all([
+      axios.post(`${URL.backend}escolaridade/lista`),
+      axios.post(`${URL.backend}estado_civil/lista`),
+      axios.post(`${URL.backend}nacionalidade/lista`),
+      axios.post(`${URL.backend}parentesco/lista`),
+      axios.post(`${URL.backend}regime_previdenciario/lista`),
+      axios.post(`${URL.backend}sexo/lista`),
+      axios.post(`${URL.backend}vinculo/lista`),
+    ])
+    .then(axios.spread((escolaridadeLista, estadoCivilLista, nacionalidadeLista, parentescoLista, regimePrevidenciarioLista, generosLista, vinculoLista) => {
+      setEscolaridadeOpcoes(escolaridadeLista.data.data);
+      setEstadoCivilOpcoes(estadoCivilLista.data.data);
+      setNacionalidadeOpcoes(nacionalidadeLista.data.data);
+      setParentesco(parentescoLista.data.data);
+      setRegimePrevidenciarioOpcoes(regimePrevidenciarioLista.data.data)
+      setGeneroOpcoes(generosLista.data.data);
+      setVinculoOpcoes(vinculoLista.data.data)
+    }))
+    .catch(erro => {
+      console.log(erro.response.data.messagem)
+    });
+  }, []);
+
   
   const data = [
     [
@@ -90,28 +134,41 @@ const EmployeeFormData = () => {
         label: 'Portador(a) de deficiência',
         value: handicapped,
         onchange: setHandicapped,
-        type: 'text'
+        type: 'select',
+        options: [
+          {
+            id: false,
+            nome: 'Não',
+          },
+          {
+            id: true,
+            nome: 'Sim',
+          }
+        ],
       },
       {
         id: 'marital_status',
         label: 'Estado civil',
         value: maritalStatus,
         onchange: setMaritalStatus,
-        type: 'text'
+        type: 'select',
+        options: estadoCivilOpcoes
       },
       {
         id: 'welfare_policy',
         label: 'Regime previdenciário',
         value: welfarePolicy,
         onchange: setWelfarePolicy,
-        type: 'text'
+        type: 'select',
+        options: regimePrevidenciarioOpcoes
       },
       {
         id: 'schooling',
         label: 'Escolaridade',
         value: schooling,
         onchange: setSchooling,
-        type: 'text'
+        type: 'select',
+        options: escolaridadeOpcoes
       },
       {
         id: 'workspace_address',
@@ -127,7 +184,7 @@ const EmployeeFormData = () => {
         label: 'Data de admissão',
         value: admissionDate,
         onchange: setAdmissionDate,
-        type: 'text'
+        type: 'date'
       },
       {
         id: 'institutional_email',
@@ -155,21 +212,33 @@ const EmployeeFormData = () => {
         label: 'Tipo de vínculo',
         value: typeOfContract,
         onchange: setTypeOfContract,
-        type: 'text'
+        type: 'select',
+        options: vinculoOpcoes
       },
       {
         id: 'gender',
         label: 'Gênero',
         value: gender,
         onchange: setGender,
-        type: 'text'
+        type: 'select',
+        options: generoOpcoes
       },
       {
         id: 'syndicate',
-        label: 'Sindicato',
+        label: 'Sindicalizado',
         value: syndicate,
         onchange: setSyndicate,
-        type: 'text'
+        type: 'select',
+        options: [
+          {
+            id: false,
+            nome: 'Não',
+          },
+          {
+            id: true,
+            nome: 'Sim',
+          }
+        ],
       },
       {
         id: 'personal_address',
@@ -183,6 +252,13 @@ const EmployeeFormData = () => {
         label: 'Descrição de lotação',
         value: workspaceDescription,
         onchange: setWorkspaceDescription,
+        type: 'text'
+      },
+      {
+        id: 'enderecoComercial',
+        label: 'Endereço Comercial',
+        value: enderecoComercial,
+        onchange: setEnderecoComercial,
         type: 'text'
       }
     ],
@@ -213,14 +289,25 @@ const EmployeeFormData = () => {
         label: 'Nacionalidade',
         value: nationality,
         onchange: setNationality,
-        type: 'text'
+        type: 'select',
+        options: nacionalidadeOpcoes
       },
       {
         id: 'borrowed_employee',
         label: 'Servidor cedido',
         value: borrowedEmployee,
         onchange: setBorrowedEmployee,
-        type: 'text'
+        type: 'select',
+        options: [
+          {
+            id: false,
+            nome: 'Não',
+          },
+          {
+            id: true,
+            nome: 'Sim',
+          }
+        ],
       },
       {
         id: 'retirement_ordinance',
@@ -234,20 +321,37 @@ const EmployeeFormData = () => {
         label: 'Data da aposentadoria',
         value: retirementDate,
         onchange: setRetirementDate,
-        type: 'text'
+        type: 'date'
       },
       {
         id: 'birth_date',
         label: 'Data de nascimento',
         value: birthDate,
         onchange: setBirthDate,
-        type: 'text'
+        type: 'date'
       },
       {
         id: 'retired',
         label: 'Aposentado',
         value: retired,
         onchange: setRetired,
+        type: 'select',
+        options: [
+          {
+            id: false,
+            nome: 'Não',
+          },
+          {
+            id: true,
+            nome: 'Sim',
+          }
+        ],
+      },
+      {
+        id: 'salario',
+        label: 'Salário',
+        value: salario,
+        onchange: setSalario,
         type: 'text'
       }
     ]
@@ -301,7 +405,7 @@ const EmployeeFormData = () => {
     if (welfarePolicy === '') {
       setAlert({
         severity: 'error',
-        content: 'Favor preencher regime previdenciário"'
+        content: 'Favor preencher o campo "regime previdenciário"'
       })
       setShowAlert(true);
       return;
@@ -451,6 +555,95 @@ const EmployeeFormData = () => {
       setShowAlert(true);
       return;
     }
+    let obj = {
+      matricula: registry,
+      nome: name,
+      cpf: cpf,
+      rg: rg,
+      endereco_residencial: personalAddress,
+      endereco_comercial: enderecoComercial,
+      foto: 'foto',
+      data_nascimento: birthDate,
+      sexo_id: gender,
+      escolaridade_id: schooling,
+      estado_civil_id: maritalStatus,
+      portador_deficiencia: handicapped,
+      titulo_eleitor: voterRegistrationCard,
+      vinculo_id: typeOfContract,
+      sindicalizado: syndicate,
+      email_pessoal: personalEmail,
+      email_funcional: institutionalEmail,
+      regime_previdenciario_id: welfarePolicy,
+      data_admissão: admissionDate,
+      mae: mothersName,
+      pai: fathersName,
+      nacionalidade_id: nationality,
+      servidor_cedido: borrowedEmployee,
+      portaria_aposentadoria: retirementOrdinance,
+      data_aposentadoria: retirementDate,
+      lotacao_endereco: workspaceAddress,
+      lotacao_descricao: workspaceDescription,
+      salario: salario,
+      dependentes: dependentes
+    }
+    axios.post(`${URL.backend}servidor/criar`, obj)
+    .then(resposta => {
+      console.log(resposta);
+      setAlert({
+        severity: 'success',
+        content: 'Usuário cadastrado com sucesso.'
+      })
+      setShowAlert(true);
+    })
+    .catch(erro => {
+      setAlert({
+        severity: 'error',
+        content: erro.response.data.messagem
+      })
+      setShowAlert(true);
+    })
+  }
+
+  const adicionarDependente = () => {
+    if (dependenteNome === '') {
+      setAlert({
+        severity: 'error',
+        content: 'O nome do dependente não pode ser vazio.'
+      })
+      return;
+    }
+
+    if (dependenteCpf === '') {
+      setAlert({
+        severity: 'error',
+        content: 'O CPF do dependente não pode ser vazio.'
+      })
+      return;
+    }
+
+    if (dependenteDataNascimento === '') {
+      setAlert({
+        severity: 'error',
+        content: 'A data de nascimento do dependente não pode ser vazio.'
+      })
+      return;
+    }
+
+    let novosDependentes = [];
+    dependentes.forEach(dependente => {
+      novosDependentes.push(dependente);
+    })
+
+    novosDependentes.push({
+      nome: dependenteNome,
+      cpf: dependenteCpf,
+      data_nascimento: dependenteDataNascimento
+    })
+
+    setDependentes(novosDependentes);
+    setDependenteNome('');
+    setDependenteCpf('');
+    setDependenteDataNascimento('');
   }
 
   return (
@@ -501,28 +694,90 @@ const EmployeeFormData = () => {
               </Col>
             </Row>
             <div className="simple-space"></div>
-            <Row>
+          
+            <Row className='justify-content-evenly'>
               <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <h7>Dependente 1</h7>
+                <TextField
+                  id='nome_dependente'
+                  label='Nome'
+                  value={dependenteNome}
+                  onChange={(e) => setDependenteNome(e.target.value)}
+                />
+              </Col>
+              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                <TextField
+                  id='cpf_dependente'
+                  label="CPF"
+                  value={dependenteCpf}
+                  onChange={(e) => setDependenteCpf(e.target.value)}
+                />
+              </Col>
+              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                <TextField
+                  id='data_nascimento_dependente'
+                  label='Data de nascimento'
+                  type='date'
+                  value={dependenteDataNascimento}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  onChange={(e) => setDependenteDataNascimento(e.target.value)}
+                />
               </Col>
             </Row>
+            {dependentes.map((dependente, index) => {
+              return (
+                <React.Fragment key={index}>
+                  <div className="simple-space"></div>
+                  <Row>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <h7>{`Dependente ${index + 1}`}</h7>
+                    </Col>
+                  </Row>
+                  <div className="simple-space"></div>
+                  <Row className='justify-content-evenly top-buffer'>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <TextField
+                        id={`nome_dependente-${index}`}
+                        label="Nome"
+                        value={dependente.nome}
+                        onChange={(e) => console.log(e.target.value)}
+                      />
+                    </Col>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <TextField
+                        id={`cpf_dependente-${index}`}
+                        label="CPF"
+                        value={dependente.cpf}
+                        onChange={(e) => console.log(e.target.value)}
+                      />
+                    </Col>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <TextField
+                        id={`data_nascimento_dependente-${index}`}
+                        label="Data de nascimento"
+                        type='date'
+                        value={dependente.data_nascimento}
+                        onChange={(e) => console.log(e.target.value)}
+                        inputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </React.Fragment>
+              )
+            })}
+            <div className="simple-space"></div>
             <div className="simple-space"></div>
             <Row className='justify-content-evenly'>
               <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <TextField id="standard-disabled" label="Nome" defaultValue="Cristina Filha" InputProps={{ readOnly: true }} />
-              </Col>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <TextField id="standard-disabled" label="CPF" defaultValue="123.456.789-10" InputProps={{ readOnly: true }} />
-              </Col>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <TextField id="standard-disabled" label="Data de nascimento" defaultValue="10/07/2010" InputProps={{ readOnly: true }} />
-              </Col>
-            </Row>
-            <div className="simple-space"></div>
-            <div className="simple-space"></div>
-            <Row className='justify-content-evenly'>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <IconButton> <AddIcon></AddIcon> </IconButton>
+                <IconButton onClick={() => adicionarDependente()}>
+                  <AddIcon />
+                </IconButton>
               </Col>
             </Row>
             <div className="simple-space"></div>
@@ -536,7 +791,14 @@ const EmployeeFormData = () => {
           <Button variant="contained" color="primary" disableElevation>Imprimir</Button>
         </Col>
         <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
-          <Button variant="contained" color="primary" disableElevation>Salvar</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            onClick={() => save()}
+          >
+            Salvar
+          </Button>
         </Col>
       </Row>
     </React.Fragment>
