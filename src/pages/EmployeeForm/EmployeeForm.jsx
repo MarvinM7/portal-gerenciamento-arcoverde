@@ -33,7 +33,7 @@ const EmployeeFormPage = () => {
           <Col className='text-center' xs='12' sm='12' md='3' lg='3' xl='3'>
             <Button
               variant="contained"
-              color={screen === 1 ? 'primary' : 'grey'}
+              color={screen === 1 ? 'primary' : 'secondary'}
               disableElevation
               onClick={() => setScreen(1)}
             >
@@ -44,7 +44,7 @@ const EmployeeFormPage = () => {
           <Col className='text-center' xs='12' sm='12' md='3' lg='3' xl='3'>
             <Button
               variant="contained"
-              color={screen === 2 ? 'primary' : 'grey'}
+              color={screen === 2 ? 'primary' : 'secondary'}
               disableElevation
               onClick={() => setScreen(2)}
             >
@@ -55,7 +55,7 @@ const EmployeeFormPage = () => {
           <Col className='text-center' xs='12' sm='12' md='3' lg='3' xl='3'>
             <Button
               variant="contained"
-              color={screen === 3 ? 'primary' : 'grey'}
+              color={screen === 3 ? 'primary' : 'secondary'}
               disableElevation
               onClick={() => setScreen(3)}
             >

@@ -11,7 +11,12 @@ import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/Button';
 
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
+
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
 import URL from "../../components/Url/Url";
 import ReplaceImage from './ReplaceImage';
@@ -58,14 +63,14 @@ const EmployeeFormData = () => {
   const [retirementDate, setRetirementDate] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [retired, setRetired] = useState('');
-  const [salario, setSalario] = useState('');
 
   const [dependenteNome, setDependenteNome] = useState('');
   const [dependenteCpf, setDependenteCpf] = useState('');
   const [dependenteDataNascimento, setDependenteDataNascimento] = useState('');
+  const [dependenteParentesco, setDependenteParentesco] = useState('');
 
   const [dependentes, setDependentes] = useState([]);
-  const [parentesco, setParentesco] = useState([]);
+  const [parentescoOpcoes, setParentescoOpcoes] = useState([]);
 
   useEffect(() => {
     axios.all([
@@ -81,10 +86,10 @@ const EmployeeFormData = () => {
       setEscolaridadeOpcoes(escolaridadeLista.data.data);
       setEstadoCivilOpcoes(estadoCivilLista.data.data);
       setNacionalidadeOpcoes(nacionalidadeLista.data.data);
-      setParentesco(parentescoLista.data.data);
+      setParentescoOpcoes(parentescoLista.data.data);
       setRegimePrevidenciarioOpcoes(regimePrevidenciarioLista.data.data)
       setGeneroOpcoes(generosLista.data.data);
-      setVinculoOpcoes(vinculoLista.data.data)
+      setVinculoOpcoes(vinculoLista.data.data);
     }))
     .catch(erro => {
       console.log(erro.response.data.messagem)
@@ -347,13 +352,13 @@ const EmployeeFormData = () => {
           }
         ],
       },
-      {
+      /* {
         id: 'salario',
         label: 'Salário',
         value: salario,
         onchange: setSalario,
         type: 'text'
-      }
+      } */
     ]
   ]
 
@@ -583,12 +588,11 @@ const EmployeeFormData = () => {
       data_aposentadoria: retirementDate,
       lotacao_endereco: workspaceAddress,
       lotacao_descricao: workspaceDescription,
-      salario: salario,
       dependentes: dependentes
     }
+
     axios.post(`${URL.backend}servidor/criar`, obj)
     .then(resposta => {
-      console.log(resposta);
       setAlert({
         severity: 'success',
         content: 'Usuário cadastrado com sucesso.'
@@ -629,6 +633,14 @@ const EmployeeFormData = () => {
       return;
     }
 
+    if (dependenteParentesco === '') {
+      setAlert({
+        severity: 'error',
+        content: 'O parentesco do dependente não pode ser vazio.'
+      })
+      return;
+    }
+
     let novosDependentes = [];
     dependentes.forEach(dependente => {
       novosDependentes.push(dependente);
@@ -637,13 +649,15 @@ const EmployeeFormData = () => {
     novosDependentes.push({
       nome: dependenteNome,
       cpf: dependenteCpf,
-      data_nascimento: dependenteDataNascimento
+      data_nascimento: dependenteDataNascimento,
+      parentesco_id: dependenteParentesco
     })
 
     setDependentes(novosDependentes);
     setDependenteNome('');
     setDependenteCpf('');
     setDependenteDataNascimento('');
+    setDependenteParentesco('');
   }
 
   return (
@@ -682,8 +696,8 @@ const EmployeeFormData = () => {
       <div className="simple-space"></div>
       <div className="simple-space"></div>
       <Row className='justify-content-evenly'>
-        <Col xs="10" md="1" sm="10" md='10' lg='10' xl='10'>
-          <Paper variant="outlined" InputProps={{ Color: 'primary' }}>
+        <Col xs="10" sm="10" md='10' lg='10' xl='10'>
+          <Paper variant="outlined">
             <Row className='justify-content-evenly'>
               <Col>
                 <div className="simple-space"></div>
@@ -697,12 +711,42 @@ const EmployeeFormData = () => {
           
             <Row className='justify-content-evenly'>
               <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <TextField
-                  id='nome_dependente'
-                  label='Nome'
-                  value={dependenteNome}
-                  onChange={(e) => setDependenteNome(e.target.value)}
-                />
+                <Row>
+                  <Col xs='12'>
+                    <TextField
+                      id='nome_dependente'
+                      label='Nome'
+                      value={dependenteNome}
+                      onChange={(e) => setDependenteNome(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+                <Row className='top-buffer'>
+                  <Col xs='12'>
+                    <FormControl style={{width: '100%'}}>
+                      <InputLabel id='parentesco_dependente'>Parentesco</InputLabel>
+                      <Select
+                        id='parentesco_dependente'
+                        value={dependenteParentesco}
+                        onChange={(e) => setDependenteParentesco(e.target.value)}
+                      >
+                        <MenuItem value={''}>
+                          Selecionar item
+                        </MenuItem>
+                        {parentescoOpcoes.map(item => {
+                          return (
+                            <MenuItem
+                              key={item.id}
+                              value={item.id}
+                            >
+                              {item.nome}
+                            </MenuItem>
+                          )
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Col>
+                </Row>
               </Col>
               <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                 <TextField
@@ -725,6 +769,15 @@ const EmployeeFormData = () => {
                 />
               </Col>
             </Row>
+            <div className="simple-space"></div>
+            <div className="simple-space"></div>
+            <Row className='justify-content-evenly'>
+              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                <IconButton onClick={() => adicionarDependente()}>
+                  <AddIcon />
+                </IconButton>
+              </Col>
+            </Row>
             {dependentes.map((dependente, index) => {
               return (
                 <React.Fragment key={index}>
@@ -737,12 +790,42 @@ const EmployeeFormData = () => {
                   <div className="simple-space"></div>
                   <Row className='justify-content-evenly top-buffer'>
                     <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                      <TextField
-                        id={`nome_dependente-${index}`}
-                        label="Nome"
-                        value={dependente.nome}
-                        onChange={(e) => console.log(e.target.value)}
-                      />
+                      <Row>
+                        <Col xs='12'>
+                          <TextField
+                            id={`nome_dependente-${index}`}
+                            label="Nome"
+                            value={dependente.nome}
+                            onChange={(e) => console.log(e.target.value)}
+                          />
+                        </Col>
+                      </Row>
+                      <Row className='top-buffer'>
+                        <Col xs='12'>
+                          <FormControl style={{width: '100%'}}>
+                            <InputLabel id={`parentesco_dependente-${index}`}>Parentesco</InputLabel>
+                            <Select
+                              id={`parentesco_dependente-${index}`}
+                              value={dependente.parentesco_id}
+                              onChange={(e) => console.log(e.target.value)}
+                            >
+                              <MenuItem value={''}>
+                                Selecionar item
+                              </MenuItem>
+                              {parentescoOpcoes.map(item => {
+                                return (
+                                  <MenuItem
+                                    key={item.id}
+                                    value={item.id}
+                                  >
+                                    {item.nome}
+                                  </MenuItem>
+                                )
+                              })}
+                            </Select>
+                          </FormControl>
+                        </Col>
+                      </Row>
                     </Col>
                     <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                       <TextField
@@ -771,15 +854,7 @@ const EmployeeFormData = () => {
                 </React.Fragment>
               )
             })}
-            <div className="simple-space"></div>
-            <div className="simple-space"></div>
-            <Row className='justify-content-evenly'>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <IconButton onClick={() => adicionarDependente()}>
-                  <AddIcon />
-                </IconButton>
-              </Col>
-            </Row>
+            
             <div className="simple-space"></div>
             <div className="simple-space"></div>
           </Paper>

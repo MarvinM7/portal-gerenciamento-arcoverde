@@ -15,8 +15,8 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import Grid from '../../components/Grid/Grid';
 
 const HomePage = (props) => {
-  const user = useSelector((state) => state.user);
-  const history = useHistory();
+  const usuario = useSelector((state) => state.user);
+  const historico = useHistory();
 
   const menu = [
     {
@@ -45,8 +45,8 @@ const HomePage = (props) => {
     }
   ]
 
-  const changePage = (data) => {
-    history.push(data)
+  const mudarPagina = (data) => {
+    historico.push(data)
   }
 
   return (
@@ -55,18 +55,19 @@ const HomePage = (props) => {
         <Col className='align-self-center' xs='12'>
           <Row>
             <Col>
-              {user
-                ?<div className='text-title'>
-                  {`Bem-vindo, ${user.name}`}
+              {usuario?
+                <div className='text-title'>
+                  {`Bem-vindo, ${usuario.nome}`}
                 </div>
-                :null
+              :
+                null
               }
             </Col>
           </Row>
           <Row>
             <Grid
               data={menu}
-              click={changePage}
+              click={mudarPagina}
             />
           </Row>
         </Col>
