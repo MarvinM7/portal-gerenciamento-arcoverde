@@ -198,3 +198,28 @@ h7 {
     padding-left: 30px;
     display: flex   ;
 }
+
+.box-with-title {
+    background-color: #fff !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: #06933C !important;
+    display: block !important;
+    top: -9px !important;
+    position: relative !important;
+    z-index: 3 !important;
+    width: fit-content !important;
+    padding-left: 9px !important;
+    padding-right: 9px !important;
+}
+
+.button-inside-box {
+    border: 2px solid #06933C;
+    border-radius: 10px !important;
+    padding: 8px 8px;
+}
+
+.button-fixed {
+    border: 2px solid rgb(6 147 60) !important;
+    padding: 8px 8px !important;
+}
