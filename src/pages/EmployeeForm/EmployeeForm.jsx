@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import EmployeeFormData from '../../components/EmployeeFormData/EmployeeFormData';
 import EmployeeFormOcurrences from '../../components/EmployeeFormOcurrences/EmployeeFormOcurrences';
 import EmployeeFormRemovals from '../../components/EmployeeFormRemovals/EmployeeFormRemovals';
+import EmployeeFormConsignments from "../../components/EmployeeFormConsignments/EmployeeFormConsignments";
 
 const EmployeeFormPage = () => {
   
@@ -63,6 +64,17 @@ const EmployeeFormPage = () => {
             </Button>
             <div className="simple-space"></div>
           </Col>
+          <Col className='text-center' xs='12' sm='12' md='3' lg='3' xl='3'>
+            <Button
+              variant="contained"
+              color={screen === 4 ? 'primary' : 'grey'}
+              disableElevation
+              onClick={() => setScreen(4)}
+            >
+              Consignações
+            </Button>
+            <div className="simple-space"></div>
+          </Col>
         </Row>
         <div className="simple-space"></div>
         <div className="simple-space"></div>
@@ -72,6 +84,8 @@ const EmployeeFormPage = () => {
           <EmployeeFormOcurrences />
         :screen === 3?
           <EmployeeFormRemovals />
+        :screen === 4?
+          <EmployeeFormConsignments />
         :null
         }
       </Container>
