@@ -14,10 +14,7 @@ import EmployeeFormRemovals from '../../components/EmployeeFormRemovals/Employee
 import EmployeeFormConsignments from "../../components/EmployeeFormConsignments/EmployeeFormConsignments";
 
 const EmployeeFormPage = () => {
-  
-
   const [screen, setScreen] = useState(1);
-  
 
   return (
     <React.Fragment>

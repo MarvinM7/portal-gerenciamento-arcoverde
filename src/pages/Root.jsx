@@ -34,7 +34,7 @@ const Root = () => {
         <Route path="/servidor/consulta">
           <EmployeeConsultationPage />
         </Route>
-        <Route path="/servidor/formulario/{matricula}">
+        <Route path="/servidor/formulario/:matricula?">
           <EmployeeFormPage />
         </Route>
         <Route path="/" exact>
