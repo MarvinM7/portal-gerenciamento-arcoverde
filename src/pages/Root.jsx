@@ -12,18 +12,18 @@ import EmployeeConsultationPage from './EmployeeConsultation/EmployeeConsultatio
 import EmployeeFormPage from './EmployeeForm/EmployeeForm';
 
 const Root = () => {
-  const user = useSelector((state) => state.user);
+  const usuario = useSelector((state) => state.user);
   const history = useHistory();
 
   useEffect(() => {
-    if (!user) {
+    if (!usuario) {
       history.push('/login');
     }
-  }, [user])
+  }, [history, usuario])
 
   return (
     <React.Fragment>
-      {user
+      {usuario
         ?<Header />
         :null
       }
@@ -31,17 +31,17 @@ const Root = () => {
         <Route path="/login">
           <LoginPage />
         </Route>
-        <Route path="/employee/consultation">
+        <Route path="/servidor/consulta">
           <EmployeeConsultationPage />
         </Route>
-        <Route path="/employee/form">
+        <Route path="/servidor/formulario/{matricula}">
           <EmployeeFormPage />
         </Route>
         <Route path="/" exact>
           <HomePage />
         </Route>
       </Switch>
-      {user
+      {usuario
         ?<Footer />
         :null
       }

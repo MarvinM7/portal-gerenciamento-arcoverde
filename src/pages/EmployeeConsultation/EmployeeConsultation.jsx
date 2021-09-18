@@ -48,7 +48,7 @@ const EmployeeConsultationPage = (props) => {
           })
           setMostrarAlerta(true);
         } else if (resposta.data.data.length === 1) {
-          history.push(`/employee/form/${resposta.data.data[0].matricula}`)
+          history.push(`/servidor/formulario/${resposta.data.data[0].matricula}`)
         }
       })
       .catch(erro => {
@@ -107,7 +107,7 @@ const EmployeeConsultationPage = (props) => {
                 <Button
                   variant='contained'
                   color="primary"
-                  onClick={() => history.push('/employee/form')}
+                  onClick={() => history.push('/servidor/formulario')}
                   startIcon={<PersonAddIcon />}
                 >
                   Novo servidor
