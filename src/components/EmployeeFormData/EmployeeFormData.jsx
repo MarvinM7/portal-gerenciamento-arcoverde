@@ -5,7 +5,6 @@ import axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-import Alert from '@material-ui/lab/Alert';
 import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -21,16 +20,12 @@ import ColumnItem from "../../components/ColumnItem/ColumnItem";
 import URL from "../../components/Url/Url";
 import ReplaceImage from './ReplaceImage';
 
-const EmployeeFormData = () => {
-  const [alert, setAlert] = useState({});
-  const [showAlert, setShowAlert] = useState(false);
-
-  const [name, setName] = useState('');
-  const [registry, setRegistry] = useState('');
-  const [admissionDate, setAdmissionDate] = useState('');
+const EmployeeFormData = (props) => {
+  const [nome, mudarNome] = useState('');
+  const [matricula, mudarMatricula] = useState('');
+  const [dataAdmissao, mudarDataAdmissao] = useState('');
   const [workCard, setWorkCard] = useState('');
 
-  const [serviceTime, setServiceTime] = useState('');
   const [cpf, setCpf] = useState('');
   const [rg, setRg] = useState('');
   const [handicapped, setHandicapped] = useState('');
@@ -96,29 +91,64 @@ const EmployeeFormData = () => {
     });
   }, []);
 
+  useEffect(() => {
+    console.log(props.servidor)
+    if (props.servidor.matricula) {
+      mudarNome(props.servidor.nome ?? '');
+      mudarMatricula(props.servidor.matricula ?? '');
+      mudarDataAdmissao(props.servidor.data_admissao ?? '');
+      setWorkCard(props.servidor.carteira_trabalho ?? '');
+      setCpf(props.servidor.cpf ?? '');
+      setRg(props.servidor.rg ?? '');
+      setHandicapped(props.servidor.portador_deficiencia === 0 ? false : true);
+      setMaritalStatus(props.servidor.estado_civil_id ?? '');
+      setWelfarePolicy(props.servidor.regime_previdenciario_id ?? '');
+      setSchooling(props.servidor.escolaridade_id ?? '');
+      setWorkspaceAddress(props.servidor.lotacao_endereco ?? '');
+      setInstitutionalEmail(props.servidor.email_funcional ?? '');
+      setPersonalEmail(props.servidor.email_pessoal ?? '');
+      setVoterRegistrationCard(props.servidor.titulo_eleitor ?? '');
+      setTypeOfContract(props.servidor.vinculo_id ?? '');
+      setGender(props.servidor.sexo_id ?? '');
+      setSyndicate(props.servidor.sindicalizado === 0 ? false : true);
+      setPersonalAddress(props.servidor.endereco_residencial ?? '');
+      setWorkspaceDescription(props.servidor.lotacao_descricao ?? '');
+      setEnderecoComercial(props.servidor.endereco_comercial ?? '');
+      setMothersName(props.servidor.mae ?? '');
+      setFathersName(props.servidor.pai ?? '');
+      setNationality(props.servidor.nacionalidade_id ?? '');
+      setBorrowedEmployee(props.servidor.servidor_cedido === 0 ? false : true);
+      setRetirementOrdinance(props.servidor.portaria_aposentadoria ?? '');
+      setRetirementDate(props.servidor.data_aposentadoria ?? '');
+      setBirthDate(props.servidor.data_nascimento ?? '');
+      setRetired(props.servidor.aposentado === 0 ? false : true);
+      setDependentes(props.servidor.dependentes);
+    }
+  }, [props.servidor]);
   
   const data = [
     [
       {
-        id: 'name',
+        id: 'nome',
         label: 'Nome',
-        value: name,
-        onchange: setName,
+        value: nome,
+        onchange: mudarNome,
         type: 'text'
       },
       {
         id: 'registry',
         label: 'Matrícula',
-        value: registry,
-        onchange: setRegistry,
+        value: matricula,
+        onchange: mudarMatricula,
         type: 'text'
       },
       {
         id: 'service_time',
         label: 'Tempo de serviço',
-        value: serviceTime,
-        onchange: setServiceTime,
-        type: 'text'
+        value: 'serviceTime',
+        onchange: () => {},
+        type: 'text',
+        readOnly: true
       },
       {
         id: 'cpf',
@@ -185,10 +215,10 @@ const EmployeeFormData = () => {
     ],
     [
       {
-        id: 'admission_date',
+        id: 'data_admissao',
         label: 'Data de admissão',
-        value: admissionDate,
-        onchange: setAdmissionDate,
+        value: dataAdmissao,
+        onchange: mudarDataAdmissao,
         type: 'date'
       },
       {
@@ -351,14 +381,7 @@ const EmployeeFormData = () => {
             nome: 'Sim',
           }
         ],
-      },
-      /* {
-        id: 'salario',
-        label: 'Salário',
-        value: salario,
-        onchange: setSalario,
-        type: 'text'
-      } */
+      }
     ]
   ]
 
@@ -366,278 +389,162 @@ const EmployeeFormData = () => {
     obj.data.onchange(obj.value)
   }
 
-  const save = () => {
-    if (serviceTime === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "tempo de serviço"'
-      })
-      setShowAlert(true);
+  const validar = () => {
+    if (nome === '') {
+      props.criarAlerta('error', 'Favor preencher o campo "nome"');
       return;
     }
     if (cpf === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "CPF"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "CPF"');
       return;
     }
     if (rg === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "RG"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "RG"');
       return;
     }
     if (handicapped === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher se é portador(a) de deficiência"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher se é portador(a) de deficiência"');
       return;
     }
     if (maritalStatus === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "estado civil"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "estado civil"');
       return;
     }
     if (welfarePolicy === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "regime previdenciário"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "regime previdenciário"');
       return;
     }
     if (schooling === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "escolaridade"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "escolaridade"');
       return;
     }
     if (workspaceAddress === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "endereço de lotação"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "endereço de lotação"');
       return;
     }
     if (institutionalEmail === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "e-mail institucional"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "e-mail institucional"');
       return;
     }
     if (personalEmail === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "e-mail pessoal"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "e-mail pessoal"');
       return;
     }
     if (voterRegistrationCard === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "título de eleitor"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "título de eleitor"');
       return;
     }
     if (typeOfContract === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "tipo de vínculo"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "tipo de vínculo"');
       return;
     }
     if (gender === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "gênero"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "gênero"');
       return;
     }
     if (syndicate === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "sindicato"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "sindicato"');
       return;
     }
     if (personalAddress === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "endereço pessoal"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "endereço pessoal"');
       return;
     }
     if (workspaceDescription === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "descrição de lotação"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "descrição de lotação"');
       return;
     }
 
     if (mothersName === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "nome da mãe"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "nome da mãe"');
       return;
     }
     if (fathersName === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "nome do pai"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "nome do pai"');
       return;
     }
     if (nationality === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "nacionalidade"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "nacionalidade"');
       return;
     }
     if (borrowedEmployee === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "servidor cedido"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "servidor cedido"');
       return;
     }
     if (retirementOrdinance === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "portaria da aposentadoria"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "portaria da aposentadoria"');
       return;
     }
     if (retirementDate === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "data da aposentadoria"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "data da aposentadoria"');
       return;
     }
     if (birthDate === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "data de nascimento"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "data de nascimento"');
       return;
     }
     if (retired === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher o campo "aposentado"'
-      })
-      setShowAlert(true);
+      props.criarAlerta('error', 'Favor preencher o campo "aposentado"');
       return;
     }
+
     let obj = {
-      matricula: registry,
-      nome: name,
+      carteira_trabalho: workCard,
       cpf: cpf,
-      rg: rg,
-      endereco_residencial: personalAddress,
-      endereco_comercial: enderecoComercial,
-      foto: 'foto',
+      data_admissao: dataAdmissao,
       data_nascimento: birthDate,
-      sexo_id: gender,
+      data_aposentadoria: retirementDate,
+      dependentes: dependentes,
+      email_funcional: institutionalEmail,
+      email_pessoal: personalEmail,
+      endereco_comercial: enderecoComercial,
+      endereco_residencial: personalAddress,
       escolaridade_id: schooling,
       estado_civil_id: maritalStatus,
+      foto: 'foto',
+      lotacao_descricao: workspaceDescription,
+      lotacao_endereco: workspaceAddress,
+      mae: mothersName,
+      matricula,
+      nacionalidade_id: nationality,
+      nome,
+      pai: fathersName,
       portador_deficiencia: handicapped,
+      portaria_aposentadoria: retirementOrdinance,
+      regime_previdenciario_id: welfarePolicy,
+      rg: rg,
+      servidor_cedido: borrowedEmployee,
+      sexo_id: gender,
+      sindicalizado: syndicate,
       titulo_eleitor: voterRegistrationCard,
       vinculo_id: typeOfContract,
-      sindicalizado: syndicate,
-      email_pessoal: personalEmail,
-      email_funcional: institutionalEmail,
-      regime_previdenciario_id: welfarePolicy,
-      data_admissão: admissionDate,
-      mae: mothersName,
-      pai: fathersName,
-      nacionalidade_id: nationality,
-      servidor_cedido: borrowedEmployee,
-      portaria_aposentadoria: retirementOrdinance,
-      data_aposentadoria: retirementDate,
-      lotacao_endereco: workspaceAddress,
-      lotacao_descricao: workspaceDescription,
-      dependentes: dependentes
     }
 
-    axios.post(`${URL.backend}servidor/criar`, obj)
-    .then(resposta => {
-      setAlert({
-        severity: 'success',
-        content: 'Usuário cadastrado com sucesso.'
-      })
-      setShowAlert(true);
-    })
-    .catch(erro => {
-      setAlert({
-        severity: 'error',
-        content: erro.response.data.messagem
-      })
-      setShowAlert(true);
-    })
+    if (props.servidor.matricula) {
+      props.editar(obj);
+    } else {
+      props.salvar(obj);
+    }
   }
 
   const adicionarDependente = () => {
     if (dependenteNome === '') {
-      setAlert({
-        severity: 'error',
-        content: 'O nome do dependente não pode ser vazio.'
-      })
+      props.criarAlerta('error', 'O nome do dependente não pode ser vazio.');
       return;
     }
 
     if (dependenteCpf === '') {
-      setAlert({
-        severity: 'error',
-        content: 'O CPF do dependente não pode ser vazio.'
-      })
+      props.criarAlerta('error', 'O CPF do dependente não pode ser vazio.');
       return;
     }
 
     if (dependenteDataNascimento === '') {
-      setAlert({
-        severity: 'error',
-        content: 'A data de nascimento do dependente não pode ser vazio.'
-      })
+      props.criarAlerta('error', 'A data de nascimento do dependente não pode ser vazio.');
       return;
     }
 
     if (dependenteParentesco === '') {
-      setAlert({
-        severity: 'error',
-        content: 'O parentesco do dependente não pode ser vazio.'
-      })
+      props.criarAlerta('error', 'O parentesco do dependente não pode ser vazio.');
       return;
     }
 
@@ -662,15 +569,6 @@ const EmployeeFormData = () => {
 
   return (
     <React.Fragment>
-      {showAlert
-        ? <Alert
-          severity={alert.severity}
-          onClose={() => setShowAlert(false)}
-        >
-          {alert.content}
-        </Alert>
-        : null
-      }
       <Row className='justify-content-evenly'>
         <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
           <ReplaceImage props={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`}/>
@@ -854,7 +752,6 @@ const EmployeeFormData = () => {
                 </React.Fragment>
               )
             })}
-            
             <div className="simple-space"></div>
             <div className="simple-space"></div>
           </Paper>
@@ -870,7 +767,7 @@ const EmployeeFormData = () => {
             variant="contained"
             color="primary"
             disableElevation
-            onClick={() => save()}
+            onClick={() => validar()}
           >
             Salvar
           </Button>
