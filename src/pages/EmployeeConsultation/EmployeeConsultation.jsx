@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
 import Col from 'react-bootstrap/Col';
@@ -14,34 +15,56 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import Alert from '@material-ui/lab/Alert';
 
+import URL from '../../components/Url/Url';
+
 const EmployeeConsultationPage = (props) => {
   const history = useHistory();
 
-  const [alert, setAlert] = useState({});
-  const [showAlert, setShowAlert] = useState(false);
+  const [alerta, setAlerta] = useState({});
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
-  const [registration, setRegistration] = useState('');
+  const [matricula, setMatricula] = useState('');
 
-  const search = () => {
-    if (registration === '') {
-      setAlert({
-        severity: 'error',
-        content: 'Favor preencher a matrícula'
+  const procurar = () => {
+    setMostrarAlerta(false);
+    setAlerta({});
+
+    if (matricula === '') {
+      setAlerta({
+        tipo: 'error',
+        conteudo: 'Favor preencher a matrícula'
       })
-      setShowAlert(true);
+      setMostrarAlerta(true);
     } else {
-
+      let obj = {
+        matricula
+      }
+      axios.post(`${URL.backend}servidor/procurar`, obj)
+      .then(resposta => {
+        if (resposta.data.data.length === 0) {
+          setAlerta({
+            tipo: 'warning',
+            conteudo: 'Nenhum servidor encontrado.'
+          })
+          setMostrarAlerta(true);
+        } else if (resposta.data.data.length === 1) {
+          history.push(`/employee/form/${resposta.data.data[0].matricula}`)
+        }
+      })
+      .catch(erro => {
+        console.log(erro);
+      })
     }
   }
 
   return (
     <React.Fragment>
-      {showAlert
+      {mostrarAlerta
         ?<Alert
-          severity={alert.severity}
-          onClose={() => setShowAlert(false)}
+          severity={alerta.tipo}
+          onClose={() => setMostrarAlerta(false)}
         >
-          {alert.content}
+          {alerta.conteudo}
         </Alert>
         :null
       }
@@ -56,20 +79,25 @@ const EmployeeConsultationPage = (props) => {
             <Row className='login-form'>
               <TextField
                 variant='outlined'
-                id='registration'
+                id='matricula'
                 label='Matrícula'
-                defaultValue={registration}
+                value={matricula}
                 autoComplete='registration'
-                onChange={(e) => setRegistration(e.target.value)}
+                onChange={(e) => setMatricula(e.target.value)}
+                onKeyPress={(ev) => {
+                  if (ev.key === 'Enter') {
+                    procurar();
+                    ev.preventDefault();
+                  }
+                }}
               />
             </Row>
-
             <Row>
               <Col className='text-center'>
                 <Button
                   variant='contained'
                   color="primary"
-                  onClick={search}
+                  onClick={procurar}
                   startIcon={<SearchIcon />}
                 >
                   Consultar
