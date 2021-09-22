@@ -35,7 +35,6 @@ const EmployeeFormPage = () => {
       axios.post(`${URL.backend}servidor/procurar`, obj)
       .then(resposta => {
         console.log(resposta);
-        console.log(resposta.data.data[0])
         setServidor(resposta.data.data[0]);
       })
       .catch(erro => {
@@ -76,11 +75,9 @@ const EmployeeFormPage = () => {
   const editarServidor = (obj) => {
     axios.post(`${URL.backend}servidor/editar`, obj)
     .then(resposta => {
-      console.log(resposta);
       criarAlerta('success', 'Usuário editado com sucesso.');
     })
     .catch(erro => {
-      console.log(erro);
       criarAlerta('error', erro?.response?.data?.message ?? 'Tente novamente.');
     })
   }
@@ -209,6 +206,7 @@ const EmployeeFormPage = () => {
         :tela === 2?
           <EmployeeFormOcurrences
             servidor={servidor}
+            criarAlerta={criarAlerta}
             salvar={criarOcorrencia}
             editar={editarOcorrencia}
             excluir={excluirOcorrencia}

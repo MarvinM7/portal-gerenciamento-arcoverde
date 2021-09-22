@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import axios from 'axios';
+
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 
@@ -11,107 +13,164 @@ import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-const EmployeeFormOcurrences = () => {
-  const [ocurrence, setOcurrence] = useState('');
-  const [ocurrences, setOcurrences] = useState([
-    {
-      id: 1,
-      text: 'Ocorrência 1'
-    },
-    {
-      id: 2,
-      text: 'Ocorrência 2'
-    },
-    {
-      id: 3,
-      text: 'Ocorrência 3'
-    },
-  ]);
+import URL from '../Url/Url';
+
+const EmployeeFormOcurrences = (props) => {
+  const { servidor } = props;
+  const [descricao, setDescricao] = useState('');
+  const [dataRegistro, setDataRegistro] = useState('2021-09-21');
+  const [ocorrencias, setOcorrencias] = useState(servidor.ocorrencias ?? []);
 
   const data = [
     [
       {
-        id: 'name',
+        id: 'nome',
         label: 'Nome',
-        value: 'Nome',
+        value: props.servidor.nome ?? 'Nome',
         onchange: null,
         type: 'text',
         readOnly: true
       },
       {
-        id: 'registry',
+        id: 'matricula',
         label: 'Matrícula',
-        value: 'Matrícula',
+        value: props.servidor.matricula ?? 'Matrícula',
         onchange: null,
-        type: 'text'
+        type: 'text',
+        readOnly: true
       },
       {
-        id: 'admission_date',
+        id: 'data_admissao',
         label: 'Data de admissão',
-        value: 'Data de admissão',
+        value: props.servidor.data_admissao ?? '2021-09-21',
         onchange: null,
-        type: 'text'
+        type: 'date',
+        readOnly: true
       }
     ],
     [
       {
         id: 'cpf',
         label: 'CPF',
-        value: 'CPF',
+        value: props.servidor.cpf ?? 'CPF',
         onchange: null,
-        type: 'text'
+        type: 'text',
+        readOnly: true
       },
       {
         id: 'rg',
         label: 'RG',
-        value: 'RG',
+        value: props.servidor.rg ?? 'RG',
         onchange: null,
-        type: 'text'
+        type: 'text',
+        readOnly: true
       },
       {
-        id: 'work_card',
+        id: 'carteira_trabalho',
         label: 'Carteira de trabalho',
-        value: 'Carteira de trabalho',
+        value: props.servidor.carteira_trabalho ?? 'Carteira de trabalho',
         onchange: null,
-        type: 'text'
+        type: 'text',
+        readOnly: true
       }
     ]
   ]
 
   const save = () => {
+    if (descricao === '') {
+      props.criarAlerta('error', 'Favor preencher o campo "Nova ocorrência"');
+      return;
+    }
     let obj = {
-      id: ocurrences.length + 1,
-      text: ocurrence
+      servidor_matricula: servidor.matricula,
+      descricao,
+      data_registro: dataRegistro
     }
 
-    let newOcurrences = [];
-    newOcurrences.push(obj);
+    axios.post(`${URL.backend}ocorrencia/criar`, obj)
+    .then(resposta => {
+      props.criarAlerta('success', 'Ocorrência registrada com sucesso.');
 
-    ocurrences.forEach(item => {
-      newOcurrences.push(item);
+      let novasOcorrencias = [];
+      novasOcorrencias.push(obj);
+
+      ocorrencias.forEach(item => {
+        novasOcorrencias.push(item);
+      })
+
+      setOcorrencias(novasOcorrencias);
+      setDescricao('');
     })
-
-    setOcurrences(newOcurrences);
-    setOcurrence('');
+    .catch(erro => {
+      console.log(erro);
+      console.log(erro.response.data.message)
+    })
   }
 
   const remove = (id) => {
-    let newOcurrences = [];
+    let obj = {
+      id
+    }
 
-    ocurrences.forEach(item => {
-      if (item.id !== id) {
-        newOcurrences.push(item);
+    axios.post(`${URL.backend}ocorrencia/excluir`, obj)
+    .then(resposta => {
+      props.criarAlerta('success', 'Ocorrência removida com sucesso.');
+
+      let novasOcorrencias = [];
+
+      ocorrencias.forEach(item => {
+        if (item.id !== id) {
+          novasOcorrencias.push(item);
+        }
+      })
+
+      setOcorrencias(novasOcorrencias);
+    })
+    .catch(erro => {
+      console.log(erro);
+    })
+  }
+
+  const editar = (id) => {
+    let obj = {};
+
+    ocorrencias.forEach(ocorrencia => {
+      if (ocorrencia.id === id) {
+        obj = ocorrencia;
       }
     })
 
-    setOcurrences(newOcurrences);
+    axios.post(`${URL.backend}ocorrencia/editar`, obj)
+    .then(resposta => {
+      props.criarAlerta('success', 'Ocorrência editada com sucesso.');
+      console.log(resposta)
+    })
+    .catch(erro => {
+      console.log(erro);
+    })
+  }
+
+  const editarDescricao = (id, descricao) => {
+    let novasOcorrencias = [];
+    ocorrencias.forEach(ocorrencia => {
+      if (ocorrencia.id === id) {
+        ocorrencia.descricao = descricao;
+      }
+      novasOcorrencias.push(ocorrencia);
+    })
+
+    setOcorrencias(novasOcorrencias);
   }
 
   return (
     <React.Fragment>
       <Row className='justify-content-evenly'>
         <Col className='align-self-center text-center' xs='10' sm='10' md='4' lg='3' xl='3'>
-          <img src={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`} className="foto-servidor"></img>
+          <img
+            alt=""
+            src={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`}
+            className="foto-servidor"
+          />
         </Col>
         <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='9' xl='9'>
           <Row className='justify-content-evenly'>
@@ -142,8 +201,8 @@ const EmployeeFormOcurrences = () => {
             variant='outlined'
             id='new-ocurrence'
             label='Nova ocorrência'
-            value={ocurrence}
-            onChange={(e) => setOcurrence(e.target.value)}
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
           />
         </Col>
         <Col xs='12' sm='2' md='2'>
@@ -163,17 +222,20 @@ const EmployeeFormOcurrences = () => {
       </Row>
       <div className="simple-space"></div>
       <div className="simple-space"></div>
-      {ocurrences.map(item => {
+      {ocorrencias.map(item => {
         return (
           <Row key={item.id}>
             <Col xs='12' sm='10' md='10' >
               <TextField
                 fullWidth={true}
                 variant='outlined'
-                id='new-ocurrence'
-                label='Nova ocorrência'
-                value={item.text}
-                onChange={(e) => setOcurrence(e.target.value)}
+                id={`ocorrencia-${item.id}`}
+                label='Ocorrência'
+                value={item.descricao}
+                onChange={(e) => editarDescricao(item.id, e.target.value)}
+                InputLabelProps={{
+                  shrink: true
+                }}
               />
             </Col>
             <Col xs='12' sm='2' md='2' >
@@ -183,6 +245,7 @@ const EmployeeFormOcurrences = () => {
                     {...props}
                     variant="outlined"
                     color="primary"
+                    onClick={() => editar(item.id)}
                   >
                     <SaveIcon  htmlColor={'#000'} />
                   </Button> 
