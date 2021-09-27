@@ -14,6 +14,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import URL from '../Url/Url';
+import { Paper } from '@material-ui/core';
 
 const EmployeeFormOcurrences = (props) => {
   const { servidor } = props;
@@ -226,17 +227,22 @@ const EmployeeFormOcurrences = (props) => {
         return (
           <Row key={item.id}>
             <Col xs='12' sm='10' md='10' >
-              <TextField
-                fullWidth={true}
-                variant='outlined'
-                id={`ocorrencia-${item.id}`}
-                label='Ocorrência'
-                value={item.descricao}
-                onChange={(e) => editarDescricao(item.id, e.target.value)}
-                InputLabelProps={{
-                  shrink: true
-                }}
-              />
+              <Paper variant='outlined' className='MuiPaper-outlined-default-color'>
+                <span className='box-with-title-margin-left'>Ocorrência</span>
+                <TextField
+                  className='TextFieldOcorrencias'
+                  fullWidth={true}
+                  id={`ocorrencia-${item.id}`}
+                  value={item.descricao}
+                  onChange={(e) => editarDescricao(item.id, e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  InputProps={{
+                    disableUnderline: true
+                  }}
+                />
+              </Paper>
             </Col>
             <Col xs='12' sm='2' md='2' >
               <Box border="2px solid #06933C" padding="8px 8px" marginRight="20px">

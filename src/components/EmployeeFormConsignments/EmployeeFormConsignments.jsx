@@ -6,6 +6,7 @@ import ColumnItem from "../ColumnItem/ColumnItem";
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import '../../pages/EmployeeForm/EmployeeForm.css';
+import { useState } from "react";
 
 function EmployeeFormConsignments() {
   const data = [
@@ -58,10 +59,34 @@ function EmployeeFormConsignments() {
     ],
   ];
 
-  let salario = 5500 // fetch from db;
-  let jaConsignado = 1750 // fetch from db;
+  const [novoValor, setNovoValor] = useState(0);
+  const [novaInstituicao, setNovaInstituicao] = useState(0);
+  const [novaData, setNovaData] = useState('2021-01-01');
+  const [novaParcela, setNovaParcela] = useState(0);
+  const [margemDisponivel, setMargemDisponivel] = useState(0);
+  const [quantoResta, setQuantoResta] = useState(0);
+  const [salario, setSalario] = useState(5500);
+  const [consignados, setConsignados] = useState([{
+    id: 1,
+    instituicao: 'Banco do Brasil',
+    valor: '1700',
+    data: '2021-01-31',
+    parcelas: 12
+  },
+  {
+    id: 1,
+    instituicao: 'Caixa Econômica Federal',
+    valor: '100',
+    data: '2021-09-27',
+    parcelas: 5
+  }]);
+
+  let somaConsignados = consignados.map(item => {
+    return item.valor;
+  }).reduce((a,b) => Number(a)+Number(b));
+
+  const [jaConsignado, setJaConsignado] = useState(somaConsignados); // fetch from db;
   let percentualMaximo = 35 // fixed amount;
-  let consignados = [] // fetch from db;
 
   var formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -71,6 +96,17 @@ function EmployeeFormConsignments() {
   });
   // source: https://pt.stackoverflow.com/questions/348030/como-fazer-um-mask-em-javascript-puro
 
+  const editarConsignado = (id, alteracao, campo) => {
+    let novosConsignados = [];
+    consignados.forEach(consignado => {
+      if (consignado.id === id) {
+        consignado[campo] = alteracao;
+      }
+      novosConsignados.push(consignado);
+    })
+
+    setConsignados(novosConsignados);
+  }
 
   return (
     <React.Fragment>
@@ -112,7 +148,7 @@ function EmployeeFormConsignments() {
                     id='salarioPrincipal'
                     label='Salário principal'
                     value={formatter.format(salario)}
-                    onChange={(e) => console.log(e)}
+                    onChange={(e) => setMargemDisponivel(e*(percentualMaximo/100))}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
@@ -121,7 +157,7 @@ function EmployeeFormConsignments() {
                     label='Quanto já consignou'
                     value={formatter.format(jaConsignado)}
                     disabled
-                    onChange={(e) => console.log(e)}
+                    onChange={(e) => setJaConsignado(e)}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
@@ -130,7 +166,7 @@ function EmployeeFormConsignments() {
                     label='Margem disponível'
                     value={formatter.format(salario*(percentualMaximo/100))}
                     disabled
-                    onChange={(e) => console.log(e)}
+                    onChange={(e) => setMargemDisponivel(e)}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
@@ -139,7 +175,7 @@ function EmployeeFormConsignments() {
                     label='Quanto resta da margem'
                     value={formatter.format(salario*(percentualMaximo/100)-jaConsignado)}
                     disabled
-                    onChange={(e) => console.log(e)}
+                    onChange={(e) => setQuantoResta(e)}
                   />
                 </Col>
               </Row>
@@ -165,16 +201,16 @@ function EmployeeFormConsignments() {
                   <TextField
                     id='valor'
                     label='Valor'
-                    value=''
-                    onChange={(e) => console.log(e)}
+                    value={novoValor}
+                    onChange={(e) => setNovoValor(e.target.value)}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                   <TextField
                     id="instituicao"
                     label='Instituição'
-                    value=''
-                    onChange={(e) => console.log(e)}
+                    value={novaInstituicao}
+                    onChange={(e) => setNovaInstituicao(e.target.value)}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
@@ -182,17 +218,16 @@ function EmployeeFormConsignments() {
                     id='dataInicio'
                     label='Data de início'
                     type='date'
-                    defaultValue='2021-01-01'
-                    value=''
-                    onChange={(e) => console.log(e)}
+                    value={novaData}
+                    onChange={(e) => setNovaData(e.target.value)}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                   <TextField
                     id='parcelas'
                     label='Parcelas'
-                    value=''
-                    onChange={(e) => console.log(e)}
+                    value={novaParcela}
+                    onChange={(e) => setNovaParcela(e.target.value)}
                   />
                 </Col>
               </Row>
@@ -216,51 +251,57 @@ function EmployeeFormConsignments() {
       </Row>
       <Row>
         {consignados.map(item => {
+          {console.log(item);}
           return (
-            <Row key={item.id}>
-              <Paper variant='outlined'>
-              <span className='box-with-title'>Consignação</span>
-              <Row className='justify-content-evenly'>
-                <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                  <TextField
-                    id='valor'
-                    label='Valor'
-                    value={item.valor}
-                    onChange={(e) => console.log(e)}
-                  />
-                </Col>
-                <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                  <TextField
-                    id="instituicao"
-                    label='Instituição'
-                    value={item.instituicao}
-                    onChange={(e) => console.log(e)}
-                  />
-                </Col>
-                <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                  <TextField
-                    id='dataInicio'
-                    label='Data de início'
-                    type="date"
-                    defaultValue="2021-01-01"
-                    value={item.dataInicio}
-                    onChange={(e) => console.log(e)}
-                  />
-                </Col>
-                <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                  <TextField
-                    id='parcelas'
-                    label='Parcelas'
-                    value={item.parcelas}
-                    onChange={(e) => console.log(e)}
-                  />
-                </Col>
+            <React.Fragment key={item.id}>
+              <Row key={item.id}>
+                <Paper variant='outlined'>
+                <span className='box-with-title'>Consignação</span>
+                <Row className='justify-content-evenly'>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                    <TextField
+                      id={`valor-${item.id}`}
+                      label='Valor'
+                      defaultValue=''
+                      value={formatter.format(item.valor)}
+                      onChange={(e) => editarConsignado(item.id, e.target.value, 'valor')}
+                    />
+                  </Col>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                    <TextField
+                      id={`instituicao-${item.id}`}
+                      label='Instituição'
+                      defaultValue=''
+                      value={item.instituicao}
+                      onChange={(e) => console.log(e)}
+                    />
+                  </Col>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                    <TextField
+                      id={`dataInicio-${item.id}`}
+                      label='Data de início'
+                      type="date"
+                      value={item.data}
+                      onChange={(e) => console.log(e)}
+                    />
+                  </Col>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                    <TextField
+                      id={`parcelas-${item.id}`}
+                      label='Parcelas'
+                      defaultValue=''
+                      value={item.parcelas}
+                      onChange={(e) => console.log(e)}
+                    />
+                  </Col>
+                </Row>
+                <div className="simple-space"></div>
+                </Paper>
               </Row>
               <div className="simple-space"></div>
               <div className="simple-space"></div>
               <div className="simple-space"></div>
-              </Paper>
-            </Row>
+            </React.Fragment>
           )
         })}
       </Row>

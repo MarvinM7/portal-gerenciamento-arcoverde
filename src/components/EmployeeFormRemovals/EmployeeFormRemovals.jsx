@@ -238,6 +238,14 @@ const EmployeeFormRemovals = () => {
                         <MenuItem value={10}>Férias</MenuItem>
                         <MenuItem value={20}>Licença Nojo</MenuItem>
                         <MenuItem value={30}>Licença Prêmio</MenuItem>
+                        <MenuItem value={40}>Licença por motivo de doença em pessoa família</MenuItem>
+                        <MenuItem value={50}>Licença para o serviço militar</MenuItem>
+                        <MenuItem value={60}>Licença para atividade política, em conformidade com a Lei Federal</MenuItem>
+                        <MenuItem value={70}>Licença para capacitação</MenuItem>
+                        <MenuItem value={80}>Licença para tratar de interesses particulares</MenuItem>
+                        <MenuItem value={90}>Licença para desempenho de mandato classista</MenuItem>
+                        <MenuItem value={100}>Afastamento para cessão a outro órgão</MenuItem>
+                        <MenuItem value={110}>Afastamento para exercício de mandato eletivo</MenuItem>
                       </Select>
                     </FormControl>
                   </Col>
@@ -248,7 +256,7 @@ const EmployeeFormRemovals = () => {
                   <Col>
                     <SaveIcon
                       htmlColor={'#000'}
-                      style={{fontSize: 35}}
+                      className='pointer-click-size-big'
                       onClick={() => save()}
                     />
                   </Col>
@@ -332,12 +340,12 @@ const EmployeeFormRemovals = () => {
                     <Col className='align-self-end' xs='2'>
                       <Row className='justify-content-space-around'>
                         <Col>
-                          <SaveIcon htmlColor={'#000'} style={{fontSize: 35}} />
+                          <SaveIcon htmlColor={'#000'} className='pointer-click-size-big' />
                         </Col>
                         <Col>
                           <DeleteIcon
                             htmlColor={'#000'}
-                            style={{fontSize: 35}}
+                            className='pointer-click-size-big'
                             onClick={() => remove(item.id)}
                           />
                         </Col>

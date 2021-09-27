@@ -41,7 +41,7 @@ const MenuDrawer = (props) => {
   const menu = [
     {
       id: 1,
-      link: '/employee/consultation',
+      link: '/servidor/consulta',
       title: 'Servidores',
       icon: <PeopleIcon />
     },

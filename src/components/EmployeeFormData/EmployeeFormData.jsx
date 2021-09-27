@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/Button';
-
+import DeleteIcon from '@material-ui/icons/Delete';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -620,7 +620,7 @@ const EmployeeFormData = (props) => {
                   </Col>
                 </Row>
                 <Row className='top-buffer'>
-                  <Col xs='12'>
+                  <Col xs='12' className="parentesco-fixed">
                     <FormControl style={{width: '100%'}}>
                       <InputLabel id='parentesco_dependente'>Parentesco</InputLabel>
                       <Select
@@ -682,7 +682,9 @@ const EmployeeFormData = (props) => {
                   <div className="simple-space"></div>
                   <Row>
                     <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                      <h7>{`Dependente ${index + 1}`}</h7>
+                      <h7>{`Dependente ${index + 1}`}</h7> 
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <DeleteIcon className="pointer" onClick={(e) => console.log('Remover dependente', index)}></DeleteIcon>
                     </Col>
                   </Row>
                   <div className="simple-space"></div>
@@ -698,9 +700,10 @@ const EmployeeFormData = (props) => {
                           />
                         </Col>
                       </Row>
-                      <Row className='top-buffer'>
-                        <Col xs='12'>
-                          <FormControl style={{width: '100%'}}>
+                      <div className="simple-space"></div>
+                      <Row>
+                        <Col xs='12' className="parentesco-fixed">
+                          <FormControl fullWidth={true}>
                             <InputLabel id={`parentesco_dependente-${index}`}>Parentesco</InputLabel>
                             <Select
                               id={`parentesco_dependente-${index}`}
