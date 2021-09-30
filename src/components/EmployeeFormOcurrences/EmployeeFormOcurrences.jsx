@@ -45,7 +45,7 @@ const EmployeeFormOcurrences = (props) => {
       {
         id: 'data_admissao',
         label: 'Data de admissão',
-        value: props.servidor.data_admissao ?? '2021-09-21',
+        value: props.servidor.data_admissao ?? new Date().toISOString().slice(0,10),
         onchange: null,
         type: 'date',
         readOnly: true

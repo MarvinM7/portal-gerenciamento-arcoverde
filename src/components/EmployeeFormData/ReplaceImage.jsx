@@ -33,7 +33,7 @@ function ReplaceImage(imgPath) {
               <AccountCircleIcon style={{color: 'white', fontSize: '249px'}}/>
             </div> : ''
           }
-          { !imgHover? <AccountCircleIcon style={{color: 'black', fontSize: '249px'}}/> : '' }
+          { !imgHover? <AccountCircleIcon style={{color: 'grey', fontSize: '249px'}}/> : '' }
         </div> : <img alt="Pressione a imagem para alterá-la" src={imgPath.props} style={{maxWidth: '207px', maxHeight: '207px'}}> </img> 
       }
     </IconButton>
