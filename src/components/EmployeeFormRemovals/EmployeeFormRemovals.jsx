@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import axios from 'axios';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -19,6 +21,7 @@ import CardContent from '@material-ui/core/CardContent';
 import InputBase from '@material-ui/core/InputBase';
 
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
+import URL from '../../components/Url/Url';
 
 const useStyles = makeStyles({
   root: {
@@ -37,32 +40,23 @@ const useStyles = makeStyles({
   },
 });
 
-const EmployeeFormRemovals = () => {
-  const [removal, setRemoval] = useState({
-    text: '',
-    type: 0
+
+const EmployeeFormRemovals = (props) => {
+  const [afastamentoTipos, setAfastamentoTipos] = useState([]);
+
+  const [afastamento, setAfastamento] = useState({
+    descricao: '',
+    data_inicio: '',
+    data_fim: '',
+    afastamento_id: 0
   });
-  const [removals, setRemovals] = useState([
-    {
-      id: 1,
-      text: 'Afastamento 1',
-      type: 10
-    },
-    {
-      id: 2,
-      text: 'Afastamento 2',
-      type: 20
-    },
-    {
-      id: 3,
-      text: 'Afastamento 3',
-      type: 30
-    }
-  ]);
+  
+  const [afastamentos, setAfastamentos] = useState(props.servidor.afastamentos ?? []);
 
   const [type, setType] = useState(0);
 
   const classes = useStyles();
+
   const bull = <span className={classes.bullet}>•</span>;
 
   const data = [
@@ -115,37 +109,103 @@ const EmployeeFormRemovals = () => {
     ]
   ]
 
+  useEffect(() => {
+    axios.post(`${URL.backend}afastamento/lista`)
+    .then(resposta => {
+      setAfastamentoTipos(resposta.data.data);
+    })
+    .catch(erro => {
+      console.log(erro);
+    })
+  }, []);
+
   const save = () => {
     let obj = {
-      id: removals.length + 1,
-      text: removal.text,
-      type: removal.type
+      servidor_matricula: props.servidor.matricula,
+      descricao: afastamento.descricao,
+      afastamento_id: afastamento.afastamento_id,
+      data_inicio: afastamento.data_inicio,
+      data_fim: afastamento.data_fim
     }
 
-    let newRemovals = [];
-    newRemovals.push(obj);
+    axios.post(`${URL.backend}servidor_afastamento/criar`, obj)
+    .then(resposta => {
+      let novosAfastamentos = [];
+      novosAfastamentos.push(resposta.data.data);
 
-    removals.forEach(item => {
-      newRemovals.push(item);
+      afastamentos.forEach(item => {
+        novosAfastamentos.push(item);
+      })
+
+      setAfastamentos(novosAfastamentos);
+      setAfastamento({
+        descricao: '',
+        data_inicio: '',
+        data_fim: '',
+        afastamento_id: 0
+      });
     })
-
-    setRemovals(newRemovals);
-    setRemoval({
-      text: '',
-      type: 0
-    });
+    .catch(erro => {
+      console.log(erro);
+    })
   }
 
-  const remove = (id) => {
-    let newRemovals = [];
+  const editarItem = (id, campo, valor) => {
+    let novosAfastamentos = [];
 
-    removals.forEach(item => {
-      if (item.id !== id) {
-        newRemovals.push(item);
+    afastamentos.forEach(afastamento => {
+      console.log()
+      if (id !== afastamento.id) {
+        novosAfastamentos.push(afastamento);
+      } else {
+        console.log('id')
+        if (campo === 'descricao') {
+          afastamento.descricao = valor;
+        } else if (campo === 'data_inicio') {
+          afastamento.data_inicio = valor;
+        } else if (campo === 'data_fim') {
+          afastamento.data_fim = valor;
+        } else if (campo === 'afastamento_id') {
+          console.log('teste');
+          afastamento.afastamento_id = valor;
+        }
+        novosAfastamentos.push(afastamento);
       }
     })
 
-    setRemovals(newRemovals);
+    setAfastamentos(novosAfastamentos);
+  }
+
+  const editar = (item) => {
+    axios.post(`${URL.backend}servidor_afastamento/editar`, item)
+    .then(resposta => {
+      console.log(resposta);
+    })
+    .catch(erro => {
+      console.log(erro);
+    })
+  }
+
+  const remove = (id) => {
+    let obj = {
+      id
+    }
+
+    axios.post(`${URL.backend}servidor_afastamento/excluir`, obj)
+    .then(resposta => {
+      let novosAfastamentos = [];
+
+      afastamentos.forEach(item => {
+        if (item.id !== id) {
+          novosAfastamentos.push(item);
+        }
+      })
+
+      setAfastamentos(novosAfastamentos);
+    })
+    .catch(erro => {
+      console.log(erro);
+    })    
   }
   
   return (
@@ -187,8 +247,8 @@ const EmployeeFormRemovals = () => {
               <InputBase
                 id="standard-textarea"
                 placeholder='Digite aqui'
-                value={removal.text}
-                onChange={(e) => setRemoval({...removal, text: e.target.value})}
+                value={afastamento.descricao}
+                onChange={(e) => setAfastamento({...afastamento, descricao: e.target.value})}
                 fullWidth = {true}
                 multiline
               />
@@ -208,7 +268,8 @@ const EmployeeFormRemovals = () => {
                       id="from"
                       label="De"
                       type="date"
-                      defaultValue="2021-01-01"
+                      value={afastamento.data_inicio}
+                      onChange={(e) => setAfastamento({...afastamento, data_inicio: e.target.value})}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -219,7 +280,8 @@ const EmployeeFormRemovals = () => {
                       id="to"
                       label="Até"
                       type="date"
-                      defaultValue="2021-01-01"
+                      value={afastamento.data_fim}
+                      onChange={(e) => setAfastamento({...afastamento, data_fim: e.target.value})}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -230,22 +292,20 @@ const EmployeeFormRemovals = () => {
                       <InputLabel id="afastment-type-label">Tipo</InputLabel>
                       <Select
                           labelId="Tipo"
-                          id="afastment-type"
-                          value={removal.type}
-                          onChange={(e) => setRemoval({...removal, type: e.target.value})}
+                          id="afastmento-tipo"
+                          value={afastamento.afastamento_id}
+                          onChange={(e) => setAfastamento({...afastamento, afastamento_id: e.target.value})}
                       >
-                        <MenuItem value={0}>Selecione</MenuItem>
-                        <MenuItem value={10}>Férias</MenuItem>
-                        <MenuItem value={20}>Licença Nojo</MenuItem>
-                        <MenuItem value={30}>Licença Prêmio</MenuItem>
-                        <MenuItem value={40}>Licença por motivo de doença em pessoa família</MenuItem>
-                        <MenuItem value={50}>Licença para o serviço militar</MenuItem>
-                        <MenuItem value={60}>Licença para atividade política, em conformidade com a Lei Federal</MenuItem>
-                        <MenuItem value={70}>Licença para capacitação</MenuItem>
-                        <MenuItem value={80}>Licença para tratar de interesses particulares</MenuItem>
-                        <MenuItem value={90}>Licença para desempenho de mandato classista</MenuItem>
-                        <MenuItem value={100}>Afastamento para cessão a outro órgão</MenuItem>
-                        <MenuItem value={110}>Afastamento para exercício de mandato eletivo</MenuItem>
+                        {afastamentoTipos.map(tipo => {
+                          return (
+                            <MenuItem
+                              key={tipo.id}
+                              value={tipo.id}
+                            >
+                              {tipo.nome}
+                            </MenuItem>
+                          )
+                        })}
                       </Select>
                     </FormControl>
                   </Col>
@@ -268,7 +328,7 @@ const EmployeeFormRemovals = () => {
       </Row>
       <div className="simple-space"></div>
       <div className="simple-space"></div>
-      {removals.map(item => {
+      {afastamentos.map(item => {
         return (
           <React.Fragment key={item.id}>
             <Row>
@@ -281,9 +341,10 @@ const EmployeeFormRemovals = () => {
                   <CardContent>
                     <InputBase
                       id="standard-textarea"
-                      value={item.text}
+                      value={item.descricao}
                       placeholder='Digite aqui'
                       fullWidth = {true}
+                      onChange={(e) => editarItem(item.id, 'descricao', e.target.value)}
                       multiline
                     />
                   </CardContent>
@@ -302,7 +363,8 @@ const EmployeeFormRemovals = () => {
                             id="from"
                             label="De"
                             type="date"
-                            defaultValue="2021-01-01"
+                            value={item.data_inicio}
+                            onChange={(e) => editarItem(item.id, 'data_inicio', e.target.value)}
                             InputLabelProps={{
                               shrink: true,
                             }}
@@ -313,7 +375,8 @@ const EmployeeFormRemovals = () => {
                             id="to"
                             label="Até"
                             type="date"
-                            defaultValue="2021-01-01"
+                            value={item.data_fim}
+                            onChange={(e) => editarItem(item.id, 'data_fim', e.target.value)}
                             InputLabelProps={{
                               shrink: true,
                             }}
@@ -325,13 +388,19 @@ const EmployeeFormRemovals = () => {
                             <Select
                                 labelId="Tipo"
                                 id="afastment-type"
-                                value={item.type}
-                                onChange={(e) => setType(e.target.value)}
+                                value={item.afastamento_id}
+                                onChange={(e) => editarItem(item.id, 'afastamento_id', e.target.value)}
                             >
-                              <MenuItem value={0}>Selecione</MenuItem>
-                              <MenuItem value={10}>Férias</MenuItem>
-                              <MenuItem value={20}>Licença Nojo</MenuItem>
-                              <MenuItem value={30}>Licença Prêmio</MenuItem>
+                              {afastamentoTipos.map(tipo => {
+                                return (
+                                  <MenuItem
+                                    key={tipo.id}
+                                    value={tipo.id}
+                                  >
+                                    {tipo.nome}
+                                  </MenuItem>
+                                )
+                              })}
                             </Select>
                           </FormControl>
                         </Col>
@@ -340,7 +409,11 @@ const EmployeeFormRemovals = () => {
                     <Col className='align-self-end' xs='2'>
                       <Row className='justify-content-space-around'>
                         <Col>
-                          <SaveIcon htmlColor={'#000'} className='pointer-click-size-big' />
+                          <SaveIcon
+                            htmlColor={'#000'}
+                            className='pointer-click-size-big'
+                            onClick={() => editar(item)}
+                          />
                         </Col>
                         <Col>
                           <DeleteIcon
