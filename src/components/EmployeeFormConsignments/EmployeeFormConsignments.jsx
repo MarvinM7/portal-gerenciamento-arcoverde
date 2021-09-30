@@ -7,6 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import '../../pages/EmployeeForm/EmployeeForm.css';
 import { useState } from "react";
+import Pagination from "@material-ui/lab/Pagination";
 
 function EmployeeFormConsignments() {
   const data = [
@@ -66,12 +67,48 @@ function EmployeeFormConsignments() {
   const [margemDisponivel, setMargemDisponivel] = useState(0);
   const [quantoResta, setQuantoResta] = useState(0);
   const [salario, setSalario] = useState(5500);
+  const [pagina, setPagina] = useState(1);
   const [consignados, setConsignados] = useState([{
     id: 1,
     instituicao: 'Banco do Brasil',
     valor: '1700',
     data: '2021-01-31',
     parcelas: 12
+  },
+  {
+    id: 1,
+    instituicao: 'Caixa Econômica Federal',
+    valor: '100',
+    data: '2021-09-27',
+    parcelas: 5
+  },
+  {
+    id: 1,
+    instituicao: 'Caixa Econômica Federal',
+    valor: '100',
+    data: '2021-09-27',
+    parcelas: 5
+  },
+  {
+    id: 1,
+    instituicao: 'Caixa Econômica Federal',
+    valor: '100',
+    data: '2021-09-27',
+    parcelas: 5
+  },
+  {
+    id: 1,
+    instituicao: 'Caixa Econômica Federal',
+    valor: '100',
+    data: '2021-09-27',
+    parcelas: 5
+  },
+  {
+    id: 1,
+    instituicao: 'Caixa Econômica Federal',
+    valor: '100',
+    data: '2021-09-27',
+    parcelas: 5
   },
   {
     id: 1,
@@ -250,60 +287,66 @@ function EmployeeFormConsignments() {
         <div className="simple-space"></div>
       </Row>
       <Row>
-        {consignados.map(item => {
-          {console.log(item);}
-          return (
-            <React.Fragment key={item.id}>
-              <Row key={item.id}>
-                <Paper variant='outlined'>
-                <span className='box-with-title'>Consignação</span>
-                <Row className='justify-content-evenly'>
-                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                    <TextField
-                      id={`valor-${item.id}`}
-                      label='Valor'
-                      defaultValue=''
-                      value={formatter.format(item.valor)}
-                      onChange={(e) => editarConsignado(item.id, e.target.value, 'valor')}
-                    />
-                  </Col>
-                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                    <TextField
-                      id={`instituicao-${item.id}`}
-                      label='Instituição'
-                      defaultValue=''
-                      value={item.instituicao}
-                      onChange={(e) => console.log(e)}
-                    />
-                  </Col>
-                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                    <TextField
-                      id={`dataInicio-${item.id}`}
-                      label='Data de início'
-                      type="date"
-                      value={item.data}
-                      onChange={(e) => console.log(e)}
-                    />
-                  </Col>
-                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                    <TextField
-                      id={`parcelas-${item.id}`}
-                      label='Parcelas'
-                      defaultValue=''
-                      value={item.parcelas}
-                      onChange={(e) => console.log(e)}
-                    />
-                  </Col>
+        {consignados.map((item, index) => {
+          if((pagina - 1)* 5 <= index && index < (pagina * 5)){
+            return (
+              <React.Fragment key={item.id}>
+                <Row key={item.id}>
+                  <Paper variant='outlined'>
+                  <span className='box-with-title'>Consignação</span>
+                  <Row className='justify-content-evenly'>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <TextField
+                        id={`valor-${item.id}`}
+                        label='Valor'
+                        defaultValue=''
+                        value={formatter.format(item.valor)}
+                        onChange={(e) => editarConsignado(item.id, e.target.value, 'valor')}
+                      />
+                    </Col>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <TextField
+                        id={`instituicao-${item.id}`}
+                        label='Instituição'
+                        defaultValue=''
+                        value={item.instituicao}
+                        onChange={(e) => console.log(e)}
+                      />
+                    </Col>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <TextField
+                        id={`dataInicio-${item.id}`}
+                        label='Data de início'
+                        type="date"
+                        value={item.data}
+                        onChange={(e) => console.log(e)}
+                      />
+                    </Col>
+                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                      <TextField
+                        id={`parcelas-${item.id}`}
+                        label='Parcelas'
+                        defaultValue=''
+                        value={item.parcelas}
+                        onChange={(e) => console.log(e)}
+                      />
+                    </Col>
+                  </Row>
+                  <div className="simple-space"></div>
+                  </Paper>
                 </Row>
                 <div className="simple-space"></div>
-                </Paper>
-              </Row>
-              <div className="simple-space"></div>
-              <div className="simple-space"></div>
-              <div className="simple-space"></div>
-            </React.Fragment>
-          )
+                <div className="simple-space"></div>
+                <div className="simple-space"></div>
+              </React.Fragment>
+            )
+          }
         })}
+      </Row>
+      <Row className='justify-content-evenly'>
+        <Col className='align-self-center text-center' xs='12' sm='12' md='12' lg='12' xl='12'>
+          <Pagination count={Math.ceil(consignados.length/5)} variant='outlined' onChange={(e, page) => {setPagina(page)}}/>
+        </Col>
       </Row>
     </React.Fragment>
   );

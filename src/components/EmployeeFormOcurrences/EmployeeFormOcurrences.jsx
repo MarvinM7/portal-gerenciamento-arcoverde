@@ -92,7 +92,10 @@ const EmployeeFormOcurrences = (props) => {
 
     axios.post(`${URL.backend}ocorrencia/criar`, obj)
     .then(resposta => {
-      props.criarAlerta('success', 'Ocorrência registrada com sucesso.');
+      if(resposta.data.sucesso){
+        props.criarAlerta('success', 'Ocorrência registrada com sucesso.');
+        obj.id = resposta.data.data.id;
+      }
 
       let novasOcorrencias = [];
       novasOcorrencias.push(obj);
@@ -115,6 +118,10 @@ const EmployeeFormOcurrences = (props) => {
       id
     }
 
+    if(id == undefined){
+      save();
+    }
+    
     axios.post(`${URL.backend}ocorrencia/excluir`, obj)
     .then(resposta => {
       props.criarAlerta('success', 'Ocorrência removida com sucesso.');

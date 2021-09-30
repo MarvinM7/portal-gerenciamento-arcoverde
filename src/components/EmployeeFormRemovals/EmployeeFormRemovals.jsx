@@ -22,6 +22,7 @@ import InputBase from '@material-ui/core/InputBase';
 
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
 import URL from '../../components/Url/Url';
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles({
   root: {
@@ -52,7 +53,7 @@ const EmployeeFormRemovals = (props) => {
   });
   
   const [afastamentos, setAfastamentos] = useState(props.servidor.afastamentos ?? []);
-
+  const [pagina, setPagina] = useState(1);
   const [type, setType] = useState(0);
 
   const classes = useStyles();
@@ -120,7 +121,11 @@ const EmployeeFormRemovals = (props) => {
   }, []);
 
   const save = () => {
-
+    if (afastamento.descricao === '') {
+      props.criarAlerta('error', 'Favor preencher o campo "Descrição"');
+      return;
+    }
+    
     if (afastamento.data_inicio === '') {
       props.criarAlerta('error', 'Favor preencher o primeiro campo de data (De)');
       return;
@@ -262,7 +267,7 @@ const EmployeeFormRemovals = (props) => {
             <CardContent>
               <InputBase
                 id="standard-textarea"
-                placeholder='Digite aqui'
+                placeholder='Descrição'
                 value={afastamento.descricao}
                 onChange={(e) => setAfastamento({...afastamento, descricao: e.target.value})}
                 fullWidth = {true}
@@ -344,111 +349,119 @@ const EmployeeFormRemovals = (props) => {
       </Row>
       <div className="simple-space"></div>
       <div className="simple-space"></div>
-      {afastamentos.map(item => {
-        return (
-          <React.Fragment key={item.id}>
-            <Row>
-              <Col xs='12'>
-                <Card
-                  className={classes.root}
-                  style={{border: '1px solid #06933C'}}
-                  variant="outlined"
-                >
-                  <CardContent>
-                    <InputBase
-                      id="standard-textarea"
-                      value={item.descricao}
-                      placeholder='Digite aqui'
-                      fullWidth = {true}
-                      onChange={(e) => editarItem(item.id, 'descricao', e.target.value)}
-                      multiline
-                    />
-                  </CardContent>
-                  <hr
-                    style={{marginBlockEnd: '0'}}
-                  />
-                  <Row
-                    style={{
-                      padding: 10
-                    }}
+      {afastamentos.map((item, index) => {
+        if((pagina - 1)* 5 <= index && index < (pagina * 5)){
+          return (
+            <React.Fragment key={item.id}>
+              <Row>
+                <Col xs='12'>
+                  <Card
+                    className={classes.root}
+                    style={{border: '1px solid #06933C'}}
+                    variant="outlined"
                   >
-                    <Col xs='10'>
-                      <Row>
-                        <Col xs='10' sm='10' md='5' lg='4'>
-                          <TextField
-                            id="from"
-                            label="De"
-                            type="date"
-                            value={item.data_inicio}
-                            onChange={(e) => editarItem(item.id, 'data_inicio', e.target.value)}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                          />
-                        </Col>
-                        <Col xs='10' sm='10' md='5' lg='4'>
-                          <TextField
-                            id="to"
-                            label="Até"
-                            type="date"
-                            value={item.data_fim}
-                            onChange={(e) => editarItem(item.id, 'data_fim', e.target.value)}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                          />
-                        </Col>
-                        <Col xs='10' sm='10' md='5' lg='4'>
-                          <FormControl>
-                            <InputLabel id="afastment-type-label">Tipo</InputLabel>
-                            <Select
-                                labelId="Tipo"
-                                id="afastment-type"
-                                value={item.afastamento_id}
-                                onChange={(e) => editarItem(item.id, 'afastamento_id', e.target.value)}
-                            >
-                              {afastamentoTipos.map(tipo => {
-                                return (
-                                  <MenuItem
-                                    key={tipo.id}
-                                    value={tipo.id}
-                                  >
-                                    {tipo.nome}
-                                  </MenuItem>
-                                )
-                              })}
-                            </Select>
-                          </FormControl>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col className='align-self-end' xs='2'>
-                      <Row className='justify-content-space-around'>
-                        <Col>
-                          <SaveIcon
-                            htmlColor={'#000'}
-                            className='pointer-click-size-big'
-                            onClick={() => editar(item)}
-                          />
-                        </Col>
-                        <Col>
-                          <DeleteIcon
-                            htmlColor={'#000'}
-                            className='pointer-click-size-big'
-                            onClick={() => remove(item.id)}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-            <div className="simple-space"></div>
-            <div className="simple-space"></div>  
-          </React.Fragment>
-        )
+                    <CardContent>
+                      <InputBase
+                        id="standard-textarea"
+                        value={item.descricao}
+                        placeholder='Digite aqui'
+                        fullWidth = {true}
+                        onChange={(e) => editarItem(item.id, 'descricao', e.target.value)}
+                        multiline
+                      />
+                    </CardContent>
+                    <hr
+                      style={{marginBlockEnd: '0'}}
+                    />
+                    <Row
+                      style={{
+                        padding: 10
+                      }}
+                    >
+                      <Col xs='10'>
+                        <Row>
+                          <Col xs='10' sm='10' md='5' lg='4'>
+                            <TextField
+                              id="from"
+                              label="De"
+                              type="date"
+                              value={item.data_inicio}
+                              onChange={(e) => editarItem(item.id, 'data_inicio', e.target.value)}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Col>
+                          <Col xs='10' sm='10' md='5' lg='4'>
+                            <TextField
+                              id="to"
+                              label="Até"
+                              type="date"
+                              value={item.data_fim}
+                              onChange={(e) => editarItem(item.id, 'data_fim', e.target.value)}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Col>
+                          <Col xs='10' sm='10' md='5' lg='4'>
+                            <FormControl>
+                              <InputLabel id="afastment-type-label">Tipo</InputLabel>
+                              <Select
+                                  labelId="Tipo"
+                                  id="afastment-type"
+                                  value={item.afastamento_id}
+                                  onChange={(e) => editarItem(item.id, 'afastamento_id', e.target.value)}
+                                  style={{maxWidth: '250px'}}
+                              >
+                                {afastamentoTipos.map(tipo => {
+                                  return (
+                                    <MenuItem
+                                      key={tipo.id}
+                                      value={tipo.id}
+                                    >
+                                      {tipo.nome}
+                                    </MenuItem>
+                                  )
+                                })}
+                              </Select>
+                            </FormControl>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col className='align-self-end' xs='2'>
+                        <Row className='justify-content-space-around'>
+                          <Col>
+                            <SaveIcon
+                              htmlColor={'#000'}
+                              className='pointer-click-size-big'
+                              onClick={() => editar(item)}
+                            />
+                          </Col>
+                          <Col>
+                            <DeleteIcon
+                              htmlColor={'#000'}
+                              className='pointer-click-size-big'
+                              onClick={() => remove(item.id)}
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              </Row>
+              <div className="simple-space"></div>
+              <div className="simple-space"></div>  
+            </React.Fragment>
+          )
+        }
       })}
+      <Row className='justify-content-evenly'>
+        <Col className='align-self-center text-center' xs='12' sm='12' md='12' lg='12' xl='12'>
+          <Pagination count={Math.ceil(afastamentos.length/5)} variant='outlined' onChange={(e, page) => {setPagina(page)}}/>
+        </Col>
+      </Row>
       <div className="simple-space"></div>
       <div className="simple-space"></div>
       <Row className='justify-content-evenly'>

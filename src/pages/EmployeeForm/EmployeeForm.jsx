@@ -151,6 +151,7 @@ const EmployeeFormPage = () => {
               color={tela === 1 ? 'primary' : 'secondary'}
               disableElevation
               onClick={() => trocarTela(1)}
+              style={{fontFamily: "'Montserrat'", fontWeight: "bold"}}
             >
               Informações
             </Button>
@@ -162,6 +163,7 @@ const EmployeeFormPage = () => {
               color={tela === 2 ? 'primary' : 'secondary'}
               disableElevation
               onClick={() => trocarTela(2)}
+              style={{fontFamily: "'Montserrat'", fontWeight: "bold"}}
             >
               Ocorrências
             </Button>
@@ -173,6 +175,7 @@ const EmployeeFormPage = () => {
               color={tela === 3 ? 'primary' : 'secondary'}
               disableElevation
               onClick={() => trocarTela(3)}
+              style={{fontFamily: "'Montserrat'", fontWeight: "bold"}}
             >
               Afastamentos
             </Button>
@@ -185,6 +188,7 @@ const EmployeeFormPage = () => {
                 color={tela === 4 ? 'primary' : 'secondary'}
                 disableElevation
                 onClick={() => trocarTela(4)}
+                style={{fontFamily: "'Montserrat'", fontWeight: "bold"}}
               >
                 Consignações
               </Button>

@@ -10,9 +10,9 @@ const theme = createTheme({
       },
       secondary: {
         light: '#ff7961',
-        main: '#f44336',
-        dark: '#ba000d',
-        contrastText: '#000',
+        main: '#8c8c8c',
+        dark: '#32523a',
+        contrastText: '#fff',
       }
     },
     typography: {
