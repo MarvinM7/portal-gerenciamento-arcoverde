@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
 
@@ -15,12 +15,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import URL from '../Url/Url';
 import { Paper } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 
 const EmployeeFormOcurrences = (props) => {
   const { servidor } = props;
   const [descricao, setDescricao] = useState('');
   const [dataRegistro, setDataRegistro] = useState('2021-09-21');
   const [ocorrencias, setOcorrencias] = useState(servidor.ocorrencias ?? []);
+  const [pagina, setPagina] = useState(1);
 
   const data = [
     [
@@ -223,58 +225,65 @@ const EmployeeFormOcurrences = (props) => {
       </Row>
       <div className="simple-space"></div>
       <div className="simple-space"></div>
-      {ocorrencias.map(item => {
-        return (
-          <Row key={item.id}>
-            <Col xs='12' sm='10' md='10' >
-              <Paper variant='outlined' className='MuiPaper-outlined-default-color'>
-                <span className='box-with-title-margin-left'>Ocorrência</span>
-                <TextField
-                  className='TextFieldOcorrencias'
-                  fullWidth={true}
-                  id={`ocorrencia-${item.id}`}
-                  value={item.descricao}
-                  onChange={(e) => editarDescricao(item.id, e.target.value)}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  InputProps={{
-                    disableUnderline: true
-                  }}
-                />
-              </Paper>
-            </Col>
-            <Col xs='12' sm='2' md='2' >
-              <Box border="2px solid #06933C" padding="8px 8px" marginRight="20px">
-                {props => 
-                  <Button
-                    {...props}
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => editar(item.id)}
-                  >
-                    <SaveIcon  htmlColor={'#000'} />
-                  </Button> 
-                }
-              </Box>
-              <Box border="2px solid #06933C" padding="8px 8px"> 
-                {props => 
-                  <Button
-                    {...props}
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => remove(item.id)}
-                  >
-                    <DeleteIcon htmlColor={'#000'} />
-                  </Button> 
-                }
-              </Box>
-            </Col>
-            <div className="simple-space"></div>
-            <div className="simple-space"></div>
-          </Row>
-        )
+      {ocorrencias.map((item, index) => {
+        if((pagina - 1)* 5 <= index && index < (pagina * 5)){
+          return (
+            <Row key={item.id}>
+              <Col xs='12' sm='10' md='10' >
+                <Paper variant='outlined' className='MuiPaper-outlined-default-color'>
+                  <span className='box-with-title-margin-left'>Ocorrência</span>
+                  <TextField
+                    className='TextFieldOcorrencias'
+                    fullWidth={true}
+                    id={`ocorrencia-${item.id}`}
+                    value={item.descricao}
+                    onChange={(e) => editarDescricao(item.id, e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      disableUnderline: true
+                    }}
+                  />
+                </Paper>
+              </Col>
+              <Col xs='12' sm='2' md='2' >
+                <Box border="2px solid #06933C" padding="8px 8px" marginRight="20px">
+                  {props => 
+                    <Button
+                      {...props}
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => editar(item.id)}
+                    >
+                      <SaveIcon  htmlColor={'#000'} />
+                    </Button> 
+                  }
+                </Box>
+                <Box border="2px solid #06933C" padding="8px 8px"> 
+                  {props => 
+                    <Button
+                      {...props}
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => remove(item.id)}
+                    >
+                      <DeleteIcon htmlColor={'#000'} />
+                    </Button> 
+                  }
+                </Box>
+              </Col>
+              <div className="simple-space"></div>
+              <div className="simple-space"></div>
+            </Row>
+          )
+        }
       })}
+      <Row className='justify-content-evenly'>
+        <Col className='align-self-center text-center' xs='12' sm='12' md='12' lg='12' xl='12'>
+          <Pagination count={Math.ceil(ocorrencias.length/5)} variant='outlined' onChange={(e, page) => {setPagina(page)}}/>
+        </Col>
+      </Row>
       <Row className='justify-content-evenly'>
         <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
           <Button variant="contained" color="primary" disableElevation>Imprimir</Button>
