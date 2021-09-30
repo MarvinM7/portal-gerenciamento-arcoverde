@@ -571,7 +571,9 @@ const EmployeeFormData = (props) => {
     <React.Fragment>
       <Row className='justify-content-evenly'>
         <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
-          <ReplaceImage props={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`}/>
+          <div>
+            <ReplaceImage />
+          </div>
         </Col>
       </Row>
       <Row className='justify-content-evenly'>
