@@ -120,6 +120,22 @@ const EmployeeFormRemovals = (props) => {
   }, []);
 
   const save = () => {
+
+    if (afastamento.data_inicio === '') {
+      props.criarAlerta('error', 'Favor preencher o primeiro campo de data (De)');
+      return;
+    }
+
+    if (afastamento.data_fim === '') {
+      props.criarAlerta('error', 'Favor preencher o segundo campo de data (Até)');
+      return;
+    }
+
+    if (afastamento.afastamento_id === 0) {
+      props.criarAlerta('error', 'Favor preencher o campo "Tipo"');
+      return;
+    }
+
     let obj = {
       servidor_matricula: props.servidor.matricula,
       descricao: afastamento.descricao,

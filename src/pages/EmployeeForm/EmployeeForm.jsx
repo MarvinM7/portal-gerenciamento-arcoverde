@@ -215,6 +215,7 @@ const EmployeeFormPage = () => {
           <EmployeeFormRemovals
             servidor={servidor}
             salvar={criarAfastamento}
+            criarAlerta={criarAlerta}
             editar={editarAfastamento}
             excluir={excluirAfastamento}
           />
@@ -222,6 +223,7 @@ const EmployeeFormPage = () => {
           <EmployeeFormConsignments
             servidor={servidor}
             salvar={criarConsignacao}
+            criarAlerta={criarAlerta}
             editar={editarConsignacao}
             excluir={excluirConsignacao}
             salvarSalario={salvarSalario}
