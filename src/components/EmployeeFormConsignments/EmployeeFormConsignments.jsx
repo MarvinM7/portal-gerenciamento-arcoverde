@@ -1,6 +1,6 @@
 import { Box, Paper, TextField, Typography } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import ColumnItem from "../ColumnItem/ColumnItem";
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -62,22 +62,19 @@ const EmployeeFormConsignments = (props) => {
     ],
   ];
   const { servidor } = props;
+  let percentualMaximo = 35;
   const [novoValor, setNovoValor] = useState('');
-  const [margemDisponivel, setMargemDisponivel] = useState(0);
   const [quantoResta, setQuantoResta] = useState(0);
-
+  
   const [pagina, setPagina] = useState(1);
   const [consignados, setConsignados] = useState(servidor.consignacoes ?? []);
-
-  // let somaConsignados = consignados.map(item => {
-  //   return item.valor;
-  // }).reduce((a,b) => Number(a)+Number(b));
-
-  const [jaConsignado, setJaConsignado] = useState(''); // fetch from db;
+  
+  const [jaConsignado, setJaConsignado] = useState(consignados.map(item => { return item.valor ?? [0,0] }).reduce((a,b) => Number(a)+Number(b)) ?? 0);
   const [banco, setBanco] = useState('');
   const [quantidade_parcelas, setQuantidade_parcelas] = useState(1);
   const [data_inicio, setData_inicio] = useState(new Date().toISOString().slice(0,10))
-  let percentualMaximo = 35 // fixed amount;
+  const [salario, setSalario] = useState(servidor.salario ?? 0);
+  const [margemDisponivel, setMargemDisponivel] = useState((salario*(percentualMaximo/100)-jaConsignado) - jaConsignado ?? 0);
 
   var formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -87,16 +84,20 @@ const EmployeeFormConsignments = (props) => {
   });
   // source: https://pt.stackoverflow.com/questions/348030/como-fazer-um-mask-em-javascript-puro
 
-  const editarConsignado = (id, alteracao, campo) => {
-    let novosConsignados = [];
-    consignados.forEach(consignado => {
-      if (consignado.id === id) {
-        consignado[campo] = alteracao;
-      }
-      novosConsignados.push(consignado);
+  const editarSalario = (valor) => {
+    let obj = {
+      salario: valor,
+      matricula: servidor.matricula
+    };
+
+    axios.post(`${URL.backend}servidor/editar`, obj)
+    .then(resposta => {
+      props.criarAlerta('success', 'Servidor editado com sucesso.');
+    })
+    .catch(erro => {
+      console.log(erro);
     })
 
-    setConsignados(novosConsignados);
   }
 
   const editar = (id) => {
@@ -104,10 +105,17 @@ const EmployeeFormConsignments = (props) => {
 
     consignados.forEach(consignado => {
       if (consignado.id === id) {
-        obj = consignado;
+        obj = {
+          id: consignado.id,
+          banco: consignado.banco,
+          data_inicio: consignado.data_inicio,
+          valor: consignado.valor,
+          servidor_matricula: consignado.servidor_matricula,
+          quantidade_parcelas: new Number(consignado.quantidade_parcelas)
+        }
       }
     })
-    
+
     axios.post(`${URL.backend}consignacao/editar`, obj)
     .then(resposta => {
       props.criarAlerta('success', 'Consignado editado com sucesso.');
@@ -145,6 +153,7 @@ const EmployeeFormConsignments = (props) => {
     setNovoValor('');
     setQuantidade_parcelas('');
     setData_inicio(new Date().toISOString().slice(0,10));
+    setJaConsignado( consignados.map(item => { return item.valor ?? 0 }).reduce((a,b) => Number(a)+Number(b)) ?? 0 );
   }
 
   const remove = (id) => {
@@ -177,7 +186,6 @@ const EmployeeFormConsignments = (props) => {
 
   const editarDescricao = (id, descricao, campo) => {
     let novaConsignacao = [];
-    console.log(id, descricao, campo)
     consignados.forEach(consignado => {
       if (consignado.id === id) {
         consignado[campo] = descricao;
@@ -185,10 +193,14 @@ const EmployeeFormConsignments = (props) => {
       novaConsignacao.push(consignado);
     })
     
-    console.log('NovaCONSIGNACAO', novaConsignacao);
     setConsignados(novaConsignacao);
   }
 
+  const atualizarValores = (e) => {
+    setSalario(e.target.value);
+    setMargemDisponivel((salario*(percentualMaximo/100)-jaConsignado) - jaConsignado ?? 0);
+    setJaConsignado( consignados.map(item => { return item.valor ?? 0 }).reduce((a,b) => Number(a)+Number(b)) ?? 0 );
+  }
 
   return (
     <React.Fragment>
@@ -229,33 +241,32 @@ const EmployeeFormConsignments = (props) => {
                   <TextField
                     id='salarioPrincipal'
                     label='Salário principal'
-                    value={formatter.format(servidor.salario)}
-                    onChange={(e) => setMargemDisponivel(e*(percentualMaximo/100))}
+                    value={salario}
+                    onChange={(e) => atualizarValores(e)}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                   <TextField
                     id="qtConsignou"
                     label='Quanto já consignou'
-                    value={formatter.format(jaConsignado)}
+                    value={jaConsignado}
                     disabled
-                    onChange={(e) => setJaConsignado(e)}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                   <TextField
                     id='margemDisponivel'
                     label='Margem disponível'
-                    value={formatter.format(servidor.salario*(percentualMaximo/100))}
+                    value={margemDisponivel}
                     disabled
-                    onChange={(e) => setMargemDisponivel(e)}
+                    onChange={''}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                   <TextField
                     id='qtRestaMargem'
                     label='Quanto resta da margem'
-                    value={formatter.format(servidor.salario*(percentualMaximo/100)-jaConsignado)}
+                    value={salario*(percentualMaximo/100)-jaConsignado}
                     disabled
                     onChange={(e) => setQuantoResta(e)}
                   />
@@ -266,7 +277,7 @@ const EmployeeFormConsignments = (props) => {
           </Row>
         </Col>
         <Col className="align-self-center" xs='12' sm='1' md='1'>
-          <Button className="button-fixed" variant="outlined" color="primary">
+          <Button className="button-fixed" variant="outlined" color="primary" onClick={() => editarSalario(salario)}>
             <SaveIcon htmlColor={"#000"} />
           </Button>
         </Col>
@@ -277,7 +288,7 @@ const EmployeeFormConsignments = (props) => {
         <Col xs='12' sm='10' md='10'>
           <Row className='justify-content-evenly'>
             <Paper variant='outlined'>
-              <span className='box-with-title'>Consignação</span>
+              <span className='box-with-title'>Nova consignação</span>
               <Row className='justify-content-evenly'>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                   <TextField
@@ -346,7 +357,7 @@ const EmployeeFormConsignments = (props) => {
                           id={`valor-${item.id}`}
                           label='Valor'
                           defaultValue=''
-                          value={formatter.format(item.valor)}
+                          value={item.valor}
                           onChange={(e) => editarDescricao(item.id, e.target.value, 'valor')}
                         />
                       </Col>
