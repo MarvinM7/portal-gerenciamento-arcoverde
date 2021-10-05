@@ -568,6 +568,18 @@ const EmployeeFormData = (props) => {
     setDependenteParentesco('');
   }
 
+  const excluirDependente = id => {
+    let dependenteCopia = [];
+    
+    dependentes.map(dependente => {
+      if(dependente.id !== id){
+        dependenteCopia.push(dependente);
+      }
+    });
+    
+    setDependentes(dependenteCopia);
+  }
+
   return (
     <div>
     { nome?
@@ -690,7 +702,7 @@ const EmployeeFormData = (props) => {
                         <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                           <h7>{`Dependente ${index + 1}`}</h7>
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <DeleteIcon className="pointer" onClick={(e) => console.log('Remover dependente', index)}></DeleteIcon>
+                          <DeleteIcon className="pointer" onClick={ () => excluirDependente(dependente.id) }></DeleteIcon>
                         </Col>
                       </Row>
                       <div className="simple-space"></div>
