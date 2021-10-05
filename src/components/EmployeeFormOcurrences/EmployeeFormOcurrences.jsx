@@ -16,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import URL from '../Url/Url';
 import { Paper } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
+import ReplaceImage from '../EmployeeFormData/ReplaceImage';
 
 const EmployeeFormOcurrences = (props) => {
   const { servidor } = props;
@@ -176,11 +177,7 @@ const EmployeeFormOcurrences = (props) => {
     <React.Fragment>
       <Row className='justify-content-evenly'>
         <Col className='align-self-center text-center' xs='10' sm='10' md='4' lg='3' xl='3'>
-          <img
-            alt=""
-            src={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`}
-            className="foto-servidor"
-          />
+          <ReplaceImage />
         </Col>
         <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='9' xl='9'>
           <Row className='justify-content-evenly'>

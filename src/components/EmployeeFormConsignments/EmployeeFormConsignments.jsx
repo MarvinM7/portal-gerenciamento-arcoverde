@@ -10,6 +10,7 @@ import { useState } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import axios from "axios";
 import URL from '../Url/Url';
+import ReplaceImage from "../EmployeeFormData/ReplaceImage";
 
 const EmployeeFormConsignments = (props) => {
   const data = [
@@ -68,13 +69,15 @@ const EmployeeFormConsignments = (props) => {
   
   const [pagina, setPagina] = useState(1);
   const [consignados, setConsignados] = useState(servidor.consignacoes ?? []);
-  
-  const [jaConsignado, setJaConsignado] = useState(consignados.map(item => { return item.valor ?? [0,0] }).reduce((a,b) => Number(a)+Number(b)) ?? 0);
+  //.reduce((a,b) => Number(a)+Number(b)) ?? 0
+  const [jaConsignado, setJaConsignado] = useState(consignados.map(item => { return item.valor ?? [0,0] }).reduce((a,b) => Number(a)+Number(b),0) ?? 0);
   const [banco, setBanco] = useState('');
   const [quantidade_parcelas, setQuantidade_parcelas] = useState(1);
   const [data_inicio, setData_inicio] = useState(new Date().toISOString().slice(0,10))
   const [salario, setSalario] = useState(servidor.salario ?? 0);
-  const [margemDisponivel, setMargemDisponivel] = useState((salario*(percentualMaximo/100)-jaConsignado) - jaConsignado ?? 0);
+  const [margemDisponivel, setMargemDisponivel] = useState((salario*(percentualMaximo/100)) ?? 0);
+
+  // useEffect(console.log(jaConsignado), [jaConsignado]);
 
   var formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -153,7 +156,7 @@ const EmployeeFormConsignments = (props) => {
     setNovoValor('');
     setQuantidade_parcelas('');
     setData_inicio(new Date().toISOString().slice(0,10));
-    setJaConsignado( consignados.map(item => { return item.valor ?? 0 }).reduce((a,b) => Number(a)+Number(b)) ?? 0 );
+    setJaConsignado( consignados.map(item => { return item.valor ?? 0 }).reduce((a,b) => Number(a)+Number(b),0) ?? 0 );
   }
 
   const remove = (id) => {
@@ -196,20 +199,36 @@ const EmployeeFormConsignments = (props) => {
     setConsignados(novaConsignacao);
   }
 
+  const apenasValores = (e) => {
+    // Faz diversas coisas para impossibilitar usuário de digitar 
+    // qualquer coisa que não seja número com 2 ou 1 ou nenhuma casa decimal
+    e = e.replace(",", ".");
+    e = e.replace(/[^0-9.]+/);
+    if(e === undefined || e === 'undefined' || e === '' || e.endsWith('undefined')) {
+      e = ''
+      return e;
+    }
+    if(e.indexOf('.') !== e.lastIndexOf('.')){
+      if(e.slice(-1,) !== '.'){
+        e = '0'
+      }
+      e = e.slice(0,-1);
+    }
+    return e;
+  }
+
   const atualizarValores = (e) => {
+    e.target.value = apenasValores(e.target.value);
     setSalario(e.target.value);
-    setMargemDisponivel((salario*(percentualMaximo/100)-jaConsignado) - jaConsignado ?? 0);
-    setJaConsignado( consignados.map(item => { return item.valor ?? 0 }).reduce((a,b) => Number(a)+Number(b)) ?? 0 );
+    setMargemDisponivel((salario*(percentualMaximo/100))?? 0);
+    setJaConsignado( consignados.map(item => { return item.valor ?? 0 }).reduce((a,b) => Number(a)+Number(b),0) ?? 0 );
   }
 
   return (
     <React.Fragment>
       <Row className="justify-content-evenly">
         <Col className="align-self-center text-center" xs="10" sm="4" md="4" lg="3" xl="3">
-          <img
-            src={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`}
-            className="foto-servidor"
-          ></img>
+          <ReplaceImage />
         </Col>
         <Col className="align-self-center text-center" xs="10" sm="9" md="8" lg="9" xl="9">
           <Row className="justify-content-evenly">
@@ -249,7 +268,7 @@ const EmployeeFormConsignments = (props) => {
                   <TextField
                     id="qtConsignou"
                     label='Quanto já consignou'
-                    value={jaConsignado}
+                    value={ parseFloat(jaConsignado).toFixed(2) ?? 0}
                     disabled
                   />
                 </Col>
@@ -257,7 +276,7 @@ const EmployeeFormConsignments = (props) => {
                   <TextField
                     id='margemDisponivel'
                     label='Margem disponível'
-                    value={margemDisponivel}
+                    value={ parseFloat(salario*(percentualMaximo/100)).toFixed(2) ?? 0 }
                     disabled
                     onChange={''}
                   />
@@ -266,7 +285,7 @@ const EmployeeFormConsignments = (props) => {
                   <TextField
                     id='qtRestaMargem'
                     label='Quanto resta da margem'
-                    value={salario*(percentualMaximo/100)-jaConsignado}
+                    value={ parseFloat(salario*(percentualMaximo/100)-jaConsignado).toFixed(2) ?? 0}
                     disabled
                     onChange={(e) => setQuantoResta(e)}
                   />
@@ -295,7 +314,7 @@ const EmployeeFormConsignments = (props) => {
                     id='valor'
                     label='Valor'
                     value={novoValor}
-                    onChange={(e) => setNovoValor(e.target.value)}
+                    onChange={(e) => setNovoValor(apenasValores(e.target.value))}
                   />
                 </Col>
                 <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>

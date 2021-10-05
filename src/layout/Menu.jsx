@@ -17,6 +17,7 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PeopleIcon from '@material-ui/icons/People';
 import DescriptionIcon from '@material-ui/icons/Description';
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import { HomeOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles({
   list: {
@@ -62,6 +63,11 @@ const MenuDrawer = (props) => {
       link: '/',
       title: 'Financeiro',
       icon: <AttachMoneyIcon />
+    }, {
+      id: 5,
+      link: '/',
+      title: 'Tela inicial',
+      icon: <HomeOutlined />
     }
   ]
 

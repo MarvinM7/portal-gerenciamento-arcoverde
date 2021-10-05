@@ -19,6 +19,7 @@ import TextField from '@material-ui/core/TextField';
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
 import URL from "../../components/Url/Url";
 import ReplaceImage from './ReplaceImage';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const EmployeeFormData = (props) => {
   const [nome, mudarNome] = useState('');
@@ -145,7 +146,7 @@ const EmployeeFormData = (props) => {
       {
         id: 'service_time',
         label: 'Tempo de serviço',
-        value: 'serviceTime',
+        value: ' ',
         onchange: () => {},
         type: 'text',
         readOnly: true
@@ -568,217 +569,232 @@ const EmployeeFormData = (props) => {
   }
 
   return (
-    <React.Fragment>
-      <Row className='justify-content-evenly'>
-        <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
-          <div>
-            <ReplaceImage />
-          </div>
-        </Col>
-      </Row>
-      <Row className='justify-content-evenly'>
-        {data.map((column, index) => {
-          return (
-            <Col key={index} className='text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
-              {column.map(item => {
-                return (
-                  <ColumnItem
-                    key={item.id}
-                    data={item}
-                    onChange={onChange}
-                  />
-                )
-              })}
+    <div>
+    { nome?
+        <React.Fragment>
+          <Row className='justify-content-evenly'>
+            <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
+              <div>
+                <ReplaceImage />
+              </div>
             </Col>
-          )
-        })}
-      </Row>
-      <div className="simple-space"></div>
-      <div className="simple-space"></div>
-      <Row className='justify-content-evenly'>
-        <Col xs="10" sm="10" md='10' lg='10' xl='10'>
-          <Paper variant="outlined">
-            <Row className='justify-content-evenly'>
-              <Col>
+          </Row>
+          <Row className='justify-content-evenly'>
+            {data.map((column, index) => {
+              return (
+                <Col key={index} className='text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
+                  {column.map(item => {
+                    return (
+                      <ColumnItem
+                        key={item.id}
+                        data={item}
+                        onChange={onChange}
+                      />
+                    )
+                  })}
+                </Col>
+              )
+            })}
+          </Row>
+          <div className="simple-space"></div>
+          <div className="simple-space"></div>
+          <Row className='justify-content-evenly'>
+            <Col xs="10" sm="10" md='10' lg='10' xl='10'>
+              <Paper variant="outlined">
+                <Row className='justify-content-evenly'>
+                  <Col>
+                    <div className="simple-space"></div>
+                    <div className="simple-space"></div>
+                    <div className="title-div">
+                      <h2 className="title">Dependentes</h2>
+                    </div>
+                  </Col>
+                </Row>
                 <div className="simple-space"></div>
-                <div className="simple-space"></div>
-                <div className="title-div">
-                  <h2 className="title">Dependentes</h2>
-                </div>
-              </Col>
-            </Row>
-            <div className="simple-space"></div>
-          
-            <Row className='justify-content-evenly'>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <Row>
-                  <Col xs='12'>
+        
+                <Row className='justify-content-evenly'>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                    <Row>
+                      <Col xs='12'>
+                        <TextField
+                          id='nome_dependente'
+                          label='Nome'
+                          value={dependenteNome}
+                          onChange={(e) => setDependenteNome(e.target.value)}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className='top-buffer'>
+                      <Col xs='12' className="parentesco-fixed">
+                        <FormControl style={{width: '100%'}}>
+                          <InputLabel id='parentesco_dependente'>Parentesco</InputLabel>
+                          <Select
+                            id='parentesco_dependente'
+                            value={dependenteParentesco}
+                            onChange={(e) => setDependenteParentesco(e.target.value)}
+                          >
+                            <MenuItem value={''}>
+                              Selecionar item
+                            </MenuItem>
+                            {parentescoOpcoes.map(item => {
+                              return (
+                                <MenuItem
+                                  key={item.id}
+                                  value={item.id}
+                                >
+                                  {item.nome}
+                                </MenuItem>
+                              )
+                            })}
+                          </Select>
+                        </FormControl>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
                     <TextField
-                      id='nome_dependente'
-                      label='Nome'
-                      value={dependenteNome}
-                      onChange={(e) => setDependenteNome(e.target.value)}
+                      id='cpf_dependente'
+                      label="CPF"
+                      value={dependenteCpf}
+                      onChange={(e) => setDependenteCpf(e.target.value)}
+                    />
+                  </Col>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                    <TextField
+                      id='data_nascimento_dependente'
+                      label='Data de nascimento'
+                      type='date'
+                      value={dependenteDataNascimento}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      onChange={(e) => setDependenteDataNascimento(e.target.value)}
                     />
                   </Col>
                 </Row>
-                <Row className='top-buffer'>
-                  <Col xs='12' className="parentesco-fixed">
-                    <FormControl style={{width: '100%'}}>
-                      <InputLabel id='parentesco_dependente'>Parentesco</InputLabel>
-                      <Select
-                        id='parentesco_dependente'
-                        value={dependenteParentesco}
-                        onChange={(e) => setDependenteParentesco(e.target.value)}
-                      >
-                        <MenuItem value={''}>
-                          Selecionar item
-                        </MenuItem>
-                        {parentescoOpcoes.map(item => {
-                          return (
-                            <MenuItem
-                              key={item.id}
-                              value={item.id}
-                            >
-                              {item.nome}
-                            </MenuItem>
-                          )
-                        })}
-                      </Select>
-                    </FormControl>
+                <div className="simple-space"></div>
+                <div className="simple-space"></div>
+                <Row className='justify-content-evenly'>
+                  <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                    <IconButton onClick={() => adicionarDependente()}>
+                      <AddIcon />
+                    </IconButton>
                   </Col>
                 </Row>
-              </Col>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <TextField
-                  id='cpf_dependente'
-                  label="CPF"
-                  value={dependenteCpf}
-                  onChange={(e) => setDependenteCpf(e.target.value)}
-                />
-              </Col>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <TextField
-                  id='data_nascimento_dependente'
-                  label='Data de nascimento'
-                  type='date'
-                  value={dependenteDataNascimento}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  onChange={(e) => setDependenteDataNascimento(e.target.value)}
-                />
-              </Col>
-            </Row>
-            <div className="simple-space"></div>
-            <div className="simple-space"></div>
-            <Row className='justify-content-evenly'>
-              <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                <IconButton onClick={() => adicionarDependente()}>
-                  <AddIcon />
-                </IconButton>
-              </Col>
-            </Row>
-            {dependentes.map((dependente, index) => {
-              return (
-                <React.Fragment key={index}>
-                  <div className="simple-space"></div>
-                  <Row>
-                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                      <h7>{`Dependente ${index + 1}`}</h7> 
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <DeleteIcon className="pointer" onClick={(e) => console.log('Remover dependente', index)}></DeleteIcon>
-                    </Col>
-                  </Row>
-                  <div className="simple-space"></div>
-                  <Row className='justify-content-evenly top-buffer'>
-                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                {dependentes.map((dependente, index) => {
+                  console.log(dependente)
+                  return (
+                    <React.Fragment key={index}>
+                      <div className="simple-space"></div>
                       <Row>
-                        <Col xs='12'>
-                          <TextField
-                            id={`nome_dependente-${index}`}
-                            label="Nome"
-                            value={dependente.nome}
-                            onChange={(e) => console.log(e.target.value)}
-                          />
+                        <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                          <h7>{`Dependente ${index + 1}`}</h7>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <DeleteIcon className="pointer" onClick={(e) => console.log('Remover dependente', index)}></DeleteIcon>
                         </Col>
                       </Row>
                       <div className="simple-space"></div>
-                      <Row>
-                        <Col xs='12' className="parentesco-fixed">
-                          <FormControl fullWidth={true}>
-                            <InputLabel id={`parentesco_dependente-${index}`}>Parentesco</InputLabel>
-                            <Select
-                              id={`parentesco_dependente-${index}`}
-                              value={dependente.parentesco_id}
-                              onChange={(e) => console.log(e.target.value)}
-                            >
-                              <MenuItem value={''}>
-                                Selecionar item
-                              </MenuItem>
-                              {parentescoOpcoes.map(item => {
-                                return (
-                                  <MenuItem
-                                    key={item.id}
-                                    value={item.id}
-                                  >
-                                    {item.nome}
+                      <Row className='justify-content-evenly top-buffer'>
+                        <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                          <Row>
+                            <Col xs='12'>
+                              <TextField
+                                id={`nome_dependente-${index}`}
+                                label="Nome"
+                                value={dependente.nome}
+                                onChange={(e) => console.log(e.target.value)}
+                              />
+                            </Col>
+                          </Row>
+                          <div className="simple-space"></div>
+                          <Row>
+                            <Col xs='12' className="parentesco-fixed">
+                              <FormControl fullWidth={true}>
+                                <InputLabel id={`parentesco_dependente-${index}`}>Parentesco</InputLabel>
+                                <Select
+                                  id={`parentesco_dependente-${index}`}
+                                  value={dependente.parentesco_id}
+                                  onChange={(e) => console.log(e.target.value)}
+                                >
+                                  <MenuItem value={''}>
+                                    Selecionar item
                                   </MenuItem>
-                                )
-                              })}
-                            </Select>
-                          </FormControl>
+                                  {parentescoOpcoes.map(item => {
+                                    return (
+                                      <MenuItem
+                                        key={item.id}
+                                        value={item.id}
+                                      >
+                                        {item.nome}
+                                      </MenuItem>
+                                    )
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                          <TextField
+                            id={`cpf_dependente-${index}`}
+                            label="CPF"
+                            value={dependente.cpf}
+                            onChange={(e) => console.log(e.target.value)}
+                          />
+                        </Col>
+                        <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
+                          <TextField
+                            id={`data_nascimento_dependente-${index}`}
+                            label="Data de nascimento"
+                            type='date'
+                            value={dependente.data_nascimento}
+                            onChange={(e) => console.log(e.target.value)}
+                            inputProps={{
+                              readOnly: true,
+                            }}
+                            InputLabelProps={{
+                              shrink: true
+                            }}
+                          />
                         </Col>
                       </Row>
-                    </Col>
-                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                      <TextField
-                        id={`cpf_dependente-${index}`}
-                        label="CPF"
-                        value={dependente.cpf}
-                        onChange={(e) => console.log(e.target.value)}
-                      />
-                    </Col>
-                    <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='3'>
-                      <TextField
-                        id={`data_nascimento_dependente-${index}`}
-                        label="Data de nascimento"
-                        type='date'
-                        value={dependente.data_nascimento}
-                        onChange={(e) => console.log(e.target.value)}
-                        inputProps={{
-                          readOnly: true,
-                        }}
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                </React.Fragment>
-              )
-            })}
-            <div className="simple-space"></div>
-            <div className="simple-space"></div>
-          </Paper>
-        </Col>
-      </Row>
-      <div className="simple-space"></div>
+                    </React.Fragment>
+                  )
+                })}
+                <div className="simple-space"></div>
+                <div className="simple-space"></div>
+              </Paper>
+            </Col>
+          </Row>
+          <div className="simple-space"></div>
+          <Row className='justify-content-evenly'>
+            <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
+              <Button variant="contained" color="primary" disableElevation>Imprimir</Button>
+            </Col>
+            <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
+              <Button
+                variant="contained"
+                color="primary"
+                disableElevation
+                onClick={() => validar()}
+              >
+                Salvar
+              </Button>
+            </Col>
+          </Row>
+        </React.Fragment>
+    : 
+    <div>
       <Row className='justify-content-evenly'>
-        <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
-          <Button variant="contained" color="primary" disableElevation>Imprimir</Button>
-        </Col>
-        <Col className='text-center' xs='10' sm='4' md='3' lg='3' xl='1'>
-          <Button
-            variant="contained"
-            color="primary"
-            disableElevation
-            onClick={() => validar()}
-          >
-            Salvar
-          </Button>
+        <Col className='text-center'>
+          <div style={{paddingTop: '30vh'}}></div>
+            <CircularProgress />
+          <div style={{paddingTop: '30vh'}}></div>
         </Col>
       </Row>
-    </React.Fragment>
+    </div>
+    }
+    </div>
   )
 }
 

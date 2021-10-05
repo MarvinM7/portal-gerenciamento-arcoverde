@@ -23,6 +23,7 @@ import InputBase from '@material-ui/core/InputBase';
 import ColumnItem from "../../components/ColumnItem/ColumnItem";
 import URL from '../../components/Url/Url';
 import Pagination from '@material-ui/lab/Pagination';
+import ReplaceImage from '../EmployeeFormData/ReplaceImage';
 
 const useStyles = makeStyles({
   root: {
@@ -233,7 +234,7 @@ const EmployeeFormRemovals = (props) => {
     <React.Fragment>
       <Row className='justify-content-evenly'>
         <Col className='align-self-center text-center' xs='10' sm='4' md='4' lg='3' xl='3'>
-          <img src={`${process.env.PUBLIC_URL}/imgs/photo_woman_example.png`} className="foto-servidor"></img>
+          <ReplaceImage />
         </Col>
         <Col className='align-self-center text-center' xs='10' sm='9' md='8' lg='9' xl='9'>
           <Row className='justify-content-evenly'>

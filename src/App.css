@@ -33,6 +33,16 @@ html, body {
   cursor: pointer;
 }
 
+.grid-item-disabled {
+  background-color: #d3d3d3!important;
+  border-radius: 10px!important;
+  cursor: pointer;
+}
+
+.image-cursor-default {
+  cursor: default !important;
+}
+
 .text-item {
   color: #FFF
 }

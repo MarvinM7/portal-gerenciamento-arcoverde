@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -23,30 +23,40 @@ const HomePage = (props) => {
       id: 1,
       link: '/servidor/consulta',
       title: 'Servidores',
+      disabled: false,
       icon: <PeopleIcon className='icon-item'/>
     },
     {
       id: 2,
       link: '/',
       title: 'Relatórios',
+      disabled: false,
       icon: <ListAltIcon className='icon-item' />
     },
     {
       id: 3,
       link: '/',
       title: 'Declaração',
+      disabled: false,
       icon: <DescriptionIcon className='icon-item' />
     },
     {
       id: 4,
-      link: '/',
+      link: '/2',
       title: 'Financeiro',
+      disabled: true,
       icon: <AttachMoneyIcon className='icon-item' />
     }
   ]
 
   const mudarPagina = (data) => {
-    historico.push(data)
+    if(data === '/'){
+      alert('Em construção!')
+    } else if (data === '/2') {
+      alert('A ser desenvolvido!')
+    } else {
+      historico.push(data)
+    }
   }
 
   return (
