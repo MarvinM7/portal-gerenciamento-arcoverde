@@ -66,7 +66,7 @@ const EmployeeFormRemovals = (props) => {
       {
         id: 'name',
         label: 'Nome',
-        value: 'Nome',
+        value: props.servidor.nome ?? 'Nome',
         onchange: null,
         type: 'text',
         readOnly: true
@@ -74,37 +74,37 @@ const EmployeeFormRemovals = (props) => {
       {
         id: 'registry',
         label: 'Matrícula',
-        value: 'Matrícula',
+        value: props.servidor.matricula ?? 'Matrícula',
         onchange: null,
         type: 'text'
       },
       {
         id: 'admission_date',
         label: 'Data de admissão',
-        value: 'Data de admissão',
+        value: props.servidor.data_admissao ?? new Date().toISOString().slice(0,10),
         onchange: null,
-        type: 'text'
+        type: 'date'
       }
     ],
     [
       {
         id: 'cpf',
         label: 'CPF',
-        value: 'CPF',
+        value: props.servidor.cpf ?? 'CPF',
         onchange: null,
         type: 'text'
       },
       {
         id: 'rg',
         label: 'RG',
-        value: 'RG',
+        value: props.servidor.rg ?? 'RG',
         onchange: null,
         type: 'text'
       },
       {
         id: 'work_card',
         label: 'Carteira de trabalho',
-        value: 'Carteira de trabalho',
+        value: props.servidor.carteira_trabalho ?? 'Carteira de trabalho',
         onchange: null,
         type: 'text'
       }
@@ -166,6 +166,7 @@ const EmployeeFormRemovals = (props) => {
         data_fim: '',
         afastamento_id: 0
       });
+      props.setTela(3);
     })
     .catch(erro => {
       console.log(erro);
@@ -202,6 +203,7 @@ const EmployeeFormRemovals = (props) => {
     axios.post(`${URL.backend}servidor_afastamento/editar`, item)
     .then(resposta => {
       console.log(resposta);
+      props.setTela(3);
     })
     .catch(erro => {
       console.log(erro);

@@ -23,8 +23,9 @@ function ReplaceImage(imgPath) {
   }
 
   return (
-    <IconButton className="image-cursor-default" onMouseDown={ () => invert() } >
-      {/* { 
+    <>
+    {// <IconButton className="image-cursor-default" onMouseDown={ () => invert() } >
+      /* { 
         hover ? 
         <div onMouseEnter={img_onMouseEnter} onMouseLeave={img_onMouseLeave}>
           { imgHover? 
@@ -34,9 +35,10 @@ function ReplaceImage(imgPath) {
             </div> : ''
           } */}
           <AccountCircleIcon style={{color: '#5b975b', fontSize: '249px'}}/>
-        {/* </div> : <img alt="Pressione a imagem para alterá-la" src={imgPath.props} style={{maxWidth: '207px', maxHeight: '207px'}}> </img>  */}
-      {/* } */}
-    </IconButton>
+        {/* </div> : <img alt="Pressione a imagem para alterá-la" src={imgPath.props} style={{maxWidth: '207px', maxHeight: '207px'}}> </img>  */
+      /* } */
+    /* </IconButton> */}
+    </>
   );
 }
 

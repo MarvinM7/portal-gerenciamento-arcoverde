@@ -68,6 +68,8 @@ const EmployeeFormData = (props) => {
   const [dependentes, setDependentes] = useState([]);
   const [parentescoOpcoes, setParentescoOpcoes] = useState([]);
 
+  const [carregando, setCarregando] = useState(true);
+
   useEffect(() => {
     axios.all([
       axios.post(`${URL.backend}escolaridade/lista`),
@@ -86,6 +88,7 @@ const EmployeeFormData = (props) => {
       setRegimePrevidenciarioOpcoes(regimePrevidenciarioLista.data.data)
       setGeneroOpcoes(generosLista.data.data);
       setVinculoOpcoes(vinculoLista.data.data);
+      setCarregando(false);
     }))
     .catch(erro => {
       console.log(erro.response.data.messagem)
@@ -146,7 +149,7 @@ const EmployeeFormData = (props) => {
       {
         id: 'service_time',
         label: 'Tempo de serviço',
-        value: ' ',
+        value: '',
         onchange: () => {},
         type: 'text',
         readOnly: true
@@ -472,14 +475,14 @@ const EmployeeFormData = (props) => {
       props.criarAlerta('error', 'Favor preencher o campo "servidor cedido"');
       return;
     }
-    if (retirementOrdinance === '') {
-      props.criarAlerta('error', 'Favor preencher o campo "portaria da aposentadoria"');
-      return;
-    }
-    if (retirementDate === '') {
-      props.criarAlerta('error', 'Favor preencher o campo "data da aposentadoria"');
-      return;
-    }
+    // if (retirementOrdinance === '') {
+    //   props.criarAlerta('error', 'Favor preencher o campo "portaria da aposentadoria"');
+    //   return;
+    // }
+    // if (retirementDate === '') {
+    //   props.criarAlerta('error', 'Favor preencher o campo "data da aposentadoria"');
+    //   return;
+    // }
     if (birthDate === '') {
       props.criarAlerta('error', 'Favor preencher o campo "data de nascimento"');
       return;
@@ -526,6 +529,9 @@ const EmployeeFormData = (props) => {
     } else {
       props.salvar(obj);
     }
+
+    // window.location.reload(true);
+
   }
 
   const adicionarDependente = () => {
@@ -582,7 +588,17 @@ const EmployeeFormData = (props) => {
 
   return (
     <div>
-    { nome?
+    { carregando? 
+        <div>
+          <Row className='justify-content-evenly'>
+            <Col className='text-center'>
+              <div style={{paddingTop: '30vh'}}></div>
+                <CircularProgress />
+              <div style={{paddingTop: '30vh'}}></div>
+            </Col>
+          </Row>
+        </div>
+        :
         <React.Fragment>
           <Row className='justify-content-evenly'>
             <Col className='align-self-center text-center' xs='10' sm='10' md='8' lg='3' xl='3'>
@@ -795,16 +811,6 @@ const EmployeeFormData = (props) => {
             </Col>
           </Row>
         </React.Fragment>
-    : 
-    <div>
-      <Row className='justify-content-evenly'>
-        <Col className='text-center'>
-          <div style={{paddingTop: '30vh'}}></div>
-            <CircularProgress />
-          <div style={{paddingTop: '30vh'}}></div>
-        </Col>
-      </Row>
-    </div>
     }
     </div>
   )

@@ -145,6 +145,7 @@ const LoginPage = () => {
                 variant='outlined'
                 id='password'
                 label='Senha'
+                type={'password'}
                 defaultValue={password}
                 autoComplete='current-password'
                 onChange={(e) => setPassword(e.target.value)}

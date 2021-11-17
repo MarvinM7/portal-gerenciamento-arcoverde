@@ -23,6 +23,7 @@ const EmployeeFormPage = () => {
   const { matricula } = useParams();
   const [alerta, setAlerta] = useState({});
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
+  const [carregando, setCarregando] = useState(true);
 
   const [tela, setTela] = useState(1);
   const [servidor, setServidor] = useState({});
@@ -36,12 +37,31 @@ const EmployeeFormPage = () => {
       .then(resposta => {
         console.log(resposta);
         setServidor(resposta.data.data[0]);
+        setCarregando(false);
       })
       .catch(erro => {
         console.log(erro);
       })
     }
   }, []);
+
+  const trocarTelaSalvarEditar = (tela_numero) => {
+    if (matricula) {
+      let obj = {
+        matricula
+      }
+      axios.post(`${URL.backend}servidor/procurar`, obj)
+      .then(resposta => {
+        console.log(resposta);
+        setServidor(resposta.data.data[0]);
+        setCarregando(false);
+        setTela(tela_numero);
+      })
+      .catch(erro => {
+        console.log(erro);
+      })
+    }
+  }
 
   const trocarTela = (tela_numero) => {
     if (matricula) {
@@ -75,7 +95,8 @@ const EmployeeFormPage = () => {
   const editarServidor = (obj) => {
     axios.post(`${URL.backend}servidor/editar`, obj)
     .then(resposta => {
-      criarAlerta('success', 'Usuário editado com sucesso.');
+      criarAlerta('success', 'Usuário editado com sucesso.')
+      history.go(0);
     })
     .catch(erro => {
       criarAlerta('error', erro?.response?.data?.message ?? 'Tente novamente.');
@@ -135,7 +156,32 @@ const EmployeeFormPage = () => {
       :
         null
       }
-      <Container>
+        <Container>
+          {/* {carregando ? 
+            <div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+              <div className="simple-space"></div><div className="simple-space"></div><div className="simple-space"></div>
+            </div>
+            :  */}
+      <>
         <Row className='justify-content-evenly'>
           <Col>
             <div className="title-div">
@@ -214,6 +260,7 @@ const EmployeeFormPage = () => {
             salvar={criarOcorrencia}
             editar={editarOcorrencia}
             excluir={excluirOcorrencia}
+            setTela={trocarTelaSalvarEditar}
           />
         :tela === 3?
           <EmployeeFormRemovals
@@ -222,6 +269,7 @@ const EmployeeFormPage = () => {
             criarAlerta={criarAlerta}
             editar={editarAfastamento}
             excluir={excluirAfastamento}
+            setTela={trocarTelaSalvarEditar}
           />
         :tela === 4?
           <EmployeeFormConsignments
@@ -231,9 +279,12 @@ const EmployeeFormPage = () => {
             editar={editarConsignacao}
             excluir={excluirConsignacao}
             salvarSalario={salvarSalario}
+            setTela={trocarTelaSalvarEditar}
           />
         :null
         }
+      </>
+        {/* } */}
       </Container>
     </React.Fragment>
   )

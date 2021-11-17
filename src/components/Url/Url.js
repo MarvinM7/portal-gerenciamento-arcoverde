@@ -1,8 +1,8 @@
 const URL = {
     /* backend: '',
     public: '' */
-    backend: 'http://localhost:8000/api/',
-    public: 'http://localhost:8000/'
+    backend: 'http://backend.rhcmarcoverde.com.br/api/',
+    public: 'http://rhcmarcoverde.com.br/'
 }
 
 export default URL;

@@ -107,6 +107,7 @@ const EmployeeFormOcurrences = (props) => {
 
       setOcorrencias(novasOcorrencias);
       setDescricao('');
+      props.setTela(2);
     })
     .catch(erro => {
       console.log(erro);
@@ -155,6 +156,7 @@ const EmployeeFormOcurrences = (props) => {
     .then(resposta => {
       props.criarAlerta('success', 'Ocorrência editada com sucesso.');
       console.log(resposta)
+      props.setTela(2);
     })
     .catch(erro => {
       console.log(erro);
